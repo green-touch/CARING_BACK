@@ -13,9 +13,11 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: msa_user
       SPRING_RABBITMQ_PASSWORD: test123
-#    depends_on:
-#      rabbitmq:
-#        condition: service_healthy # or service_started if no healthcheck
+      GITHUB_USERNAME: ${GITHUB_USERNAME}
+      GITHUB_PASSWORD: ${GITHUB_PASSWORD}
+    #    depends_on:
+    #      rabbitmq:
+    #        condition: service_healthy # or service_started if no healthcheck
     networks:
       - caring-net
 
@@ -33,8 +35,8 @@ services:
     depends_on:
       config-server:
         condition: service_started
-#      rabbitmq:
-#        condition: service_healthy # or service_started
+    #      rabbitmq:
+    #        condition: service_healthy # or service_started
     networks:
       - caring-net
 
