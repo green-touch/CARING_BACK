@@ -11,6 +11,8 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
 
 management:
   endpoints:
@@ -20,10 +22,10 @@ management:
 
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html   # Swagger UI ?? ??
-    enabled: true             # Swagger UI ???
+    path: /swagger-ui.html   # Swagger UI
+    enabled: true             # Swagger UI
   api-docs:
-    path: /v3/api-docs        # OpenAPI ?? ??
+    path: /v3/api-docs        # OpenAPI
   servers:
     - url: http://localhost:8000/manager-service  # Gateway ?? + prefix
-      description: Gateway? ?? Manager-Service API
+      description: Gateway Manager-Service API

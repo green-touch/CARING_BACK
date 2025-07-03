@@ -1,6 +1,10 @@
+server:
+  port: 8000
+
 spring:
   application:
     name: api-gateway-service
+
   cloud:
     gateway:
       default-filters:
@@ -10,16 +14,16 @@ spring:
             preLogger: true
             postLogger: true
       routes:
-        ### USER ###
-        ### ACCESS ###
+        # === USER SERVICE ===
+
         - id: user-service-access
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/v1/api/access/**
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        ### <USER-SERVICE> : AUTHORIZATION (MANAGER)###
+            - RewritePath=/user-service/(?<segment>.*), /${segment}
+
         - id: user-service-manager
           uri: lb://USER-SERVICE
           predicates:
@@ -27,7 +31,7 @@ spring:
             - Method=GET,POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/user-service/(?<segment>.*), /${segment}
             - ManagerAuthorizationHeaderFilter
 
         ### <ACTUATOR> ###
@@ -38,8 +42,9 @@ spring:
             - Method=GET,POST
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
-        ### <SWAGGER> ###
+            - RewritePath=/user-service/(?<segment>.*), /${segment}
+
+        # Swagger API Docs
         - id: user-service-swagger
           uri: lb://USER-SERVICE
           predicates:
@@ -47,7 +52,68 @@ spring:
             - Method=GET,POST,PUT,DELETE
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/user-service/(?<segment>.*), /${segment}
+
+        # Swagger UI 정적 리소스
+        - id: user-service-swagger-ui
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/swagger-ui.html
+            - Path=/user-service/swagger-ui/**
+            - Path=/user-service/webjars/**
+            - Path=/user-service/swagger-resources/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /${segment}
+
+        # === MANAGER SERVICE ===
+
+        - id: manager-service-common
+          uri: lb://MANAGER-SERVICE
+          predicates:
+            - Path=/manager-service/health_check, /manager-service/welcome
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/manager-service/(?<segment>.*), /${segment}
+
+        - id: manager-service-api
+          uri: lb://MANAGER-SERVICE
+          predicates:
+            - Path=/manager-service/v1/api/managers/**, /manager-service/v1/api/submissions/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/manager-service/(?<segment>.*), /${segment}
+
+        - id: manager-service-actuator
+          uri: lb://MANAGER-SERVICE
+          predicates:
+            - Path=/manager-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/manager-service/(?<segment>.*), /${segment}
+
+        - id: manager-service-swagger
+          uri: lb://MANAGER-SERVICE
+          predicates:
+            - Path=/manager-service/v3/api-docs/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/manager-service/(?<segment>.*), /${segment}
+
+        - id: manager-service-swagger-ui
+          uri: lb://MANAGER-SERVICE
+          predicates:
+            - Path=/manager-service/swagger-ui.html
+            - Path=/manager-service/swagger-ui/**
+            - Path=/manager-service/webjars/**
+            - Path=/manager-service/swagger-resources/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/manager-service/(?<segment>.*), /${segment}
 
 management:
   endpoints:
@@ -57,10 +123,11 @@ management:
 
 springdoc:
   swagger-ui:
-    urls[0]:
-      name: 회원 서비스
-      url: http://${server.address:localhost}:${server.port}/user-service/v3/api-docs
+    urls:
+      - name: 회원 서비스
+        url: /user-service/v3/api-docs
+      - name: 관리자 서비스
+        url: /manager-service/v3/api-docs
+    path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: method
-
-
