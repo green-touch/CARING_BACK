@@ -46,4 +46,4 @@ services:
 networks:
   caring-net:
     external: true # This makes the network visible to this compose file
-    name: caring-back_caring-net
+    name: caring_back_caring-net

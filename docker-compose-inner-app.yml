@@ -96,4 +96,4 @@ services:
 networks:
   caring-net:
     external: true # `docker-compose.infra.yml`에서 정의된 네트워크를 외부 네트워크로 참조
-    name: caring-back_caring-net
+    name: caring_back_caring-net
