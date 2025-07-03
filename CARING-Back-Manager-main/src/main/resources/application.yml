@@ -1,0 +1,29 @@
+server:
+  port: 0   # random port
+
+spring:
+  application:
+    name: manager-service
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html   # Swagger UI ?? ??
+    enabled: true             # Swagger UI ???
+  api-docs:
+    path: /v3/api-docs        # OpenAPI ?? ??
+  servers:
+    - url: http://localhost:8000/manager-service  # Gateway ?? + prefix
+      description: Gateway? ?? Manager-Service API

@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: api-gateway-service
+  cloud:
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+          args:
+            baseMessage: Spring Cloud Gateway GlobalFilter
+            preLogger: true
+            postLogger: true
+      routes:
+        ### USER ###
+        ### ACCESS ###
+        - id: user-service-access
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/v1/api/access/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        ### <USER-SERVICE> : AUTHORIZATION (MANAGER)###
+        - id: user-service-manager
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/v1/api/users/**, /user-service/v1/api/managers/**, /user-service/v1/api/shelters/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - ManagerAuthorizationHeaderFilter
+
+        ### <ACTUATOR> ###
+        - id: user-service-actuator
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        ### <SWAGGER> ###
+        - id: user-service-swagger
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/v3/api-docs/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+springdoc:
+  swagger-ui:
+    urls[0]:
+      name: 회원 서비스
+      url: http://${server.address:localhost}:${server.port}/user-service/v3/api-docs
+    tags-sorter: alpha
+    operations-sorter: method
+
+

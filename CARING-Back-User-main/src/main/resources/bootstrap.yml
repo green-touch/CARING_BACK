@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: local
+  cloud:
+    config:
+      name: user-service
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888
