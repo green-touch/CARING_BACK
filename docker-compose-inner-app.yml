@@ -9,7 +9,7 @@ services:
     ports:
       - "8080:8000" # 여기서 내부 애플리케이션 포트가 8080인지 다시 확인!
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: ${SERVER_PROFILE}
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
@@ -40,14 +40,14 @@ services:
         limits:
           memory: 1024M # 2GB로 메모리 제한 설정 (원하는 값으로 변경)
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: ${SERVER_PROFILE}
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/caring_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: springproject
+      SPRING_DATASOURCE_URL: jdbc:mysql://${DATABASE_URL}:3306/caring_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
       SPRING_RABBITMQ_HOST: rabbitmq
     #    depends_on:
     #      mysql:
@@ -72,14 +72,14 @@ services:
         limits:
           memory: 2048M # 2GB로 메모리 제한 설정 (원하는 값으로 변경)
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: ${SERVER_PROFILE}
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/caring_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: springproject
+      SPRING_DATASOURCE_URL: jdbc:mysql://${DATABASE_URL}:3306/caring_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
       SPRING_RABBITMQ_HOST: rabbitmq
     #    depends_on:
     #      mysql:
