@@ -1,0 +1,47 @@
+# docker-compose-outer-app.yml (Modified)
+version: '3.8'
+
+services:
+  config-server:
+    container_name: config-service
+    build:
+      context: ./CARING-Back-Config
+    ports:
+      - "8888:8888"
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: msa_user
+      SPRING_RABBITMQ_PASSWORD: test123
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy # or service_started if no healthcheck
+    networks:
+      - caring-net
+
+  discovery-server:
+    container_name: discovery-service
+    build:
+      context: ./CARING-Back-Discovery
+    ports:
+      - "8761:8761"
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: msa_user
+      SPRING_RABBITMQ_PASSWORD: test123
+    depends_on:
+      config-server:
+        condition: service_started
+#      rabbitmq:
+#        condition: service_healthy # or service_started
+    networks:
+      - caring-net
+
+  # You would also need to include 'mysql' here if user-server/manager-server are in this file
+  # And reference them correctly with depends_on for user-server and manager-server
+
+networks:
+  caring-net:
+    external: true # This makes the network visible to this compose file
+    name: caring-back_caring-net

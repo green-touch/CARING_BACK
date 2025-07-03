@@ -1,0 +1,85 @@
+# docker-compose.app.yml
+version: '3.8'
+
+services:
+  gateway-server:
+    container_name: gateway-service
+    build:
+      context: ./CARING-Back-Gateway
+    ports:
+      - "8080:8000" # 여기서 내부 애플리케이션 포트가 8080인지 다시 확인!
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+#    depends_on:
+#      discovery-server:
+#        condition: service_started
+#      config-server:
+#        condition: service_started
+#      rabbitmq:
+#        condition: service_healthy
+    networks:
+      - caring-net
+    # command: ["/bin/sh", "-c", "while ! nc -z discovery-service 8761; do sleep 1; done; java -jar app.jar"]
+    # `depends_on`의 condition:service_started를 사용하면 대부분의 경우 `command`의 `while ! nc -z` 부분은 필요 없어집니다.
+    # 애플리케이션 레벨의 준비는 Spring Boot 애플리케이션 자체의 로직에서 처리하는 것이 좋습니다.
+
+  user-server:
+    container_name: user-service
+    build:
+      context: ./CARING-Back-User
+    ports:
+      - "8082:8080" # 내부 포트 8080 확인!
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/caring_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: springproject
+      SPRING_RABBITMQ_HOST: rabbitmq
+#    depends_on:
+#      mysql:
+#        condition: service_healthy # MySQL이 완전히 준비될 때까지 기다림 (MySQL 이미지에 HEALTHCHECK 설정 필요)
+#      discovery-server:
+#        condition: service_started
+#      config-server:
+#        condition: service_started
+#      rabbitmq:
+#        condition: service_healthy
+    networks:
+      - caring-net
+
+  manager-server:
+    container_name: manager-service
+    build:
+      context: ./CARING-Back-Manager
+    ports:
+      - "8081:8080" # 내부 포트 8080 확인!
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/caring_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: springproject
+      SPRING_RABBITMQ_HOST: rabbitmq
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#      discovery-server:
+#        condition: service_started
+#      config-server:
+#        condition: service_started
+#      rabbitmq:
+#        condition: service_healthy
+    networks:
+      - caring-net
+
+networks:
+  caring-net:
+    external: true # `docker-compose.infra.yml`에서 정의된 네트워크를 외부 네트워크로 참조
+    name: caring-back_caring-net
