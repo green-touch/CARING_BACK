@@ -35,6 +35,10 @@ services:
       context: ./CARING-Back-User
     ports:
       - "8082:8080" # 내부 포트 8080 확인!
+    deploy: # 이 부분을 추가합니다.
+      resources:
+        limits:
+          memory: 1024M # 2GB로 메모리 제한 설정 (원하는 값으로 변경)
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATA_REDIS_HOST: redis
@@ -63,6 +67,10 @@ services:
       context: ./CARING-Back-Manager
     ports:
       - "8081:8080" # 내부 포트 8080 확인!
+    deploy: # 이 부분을 추가합니다.
+      resources:
+        limits:
+          memory: 2048M # 2GB로 메모리 제한 설정 (원하는 값으로 변경)
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATA_REDIS_HOST: redis
