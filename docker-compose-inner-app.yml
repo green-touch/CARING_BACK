@@ -10,17 +10,19 @@ services:
       - "8080:8000" # 여기서 내부 애플리케이션 포트가 8080인지 다시 확인!
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
       SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
-#    depends_on:
-#      discovery-server:
-#        condition: service_started
-#      config-server:
-#        condition: service_started
-#      rabbitmq:
-#        condition: service_healthy
+    #    depends_on:
+    #      discovery-server:
+    #        condition: service_started
+    #      config-server:
+    #        condition: service_started
+    #      rabbitmq:
+    #        condition: service_healthy
     networks:
       - caring-net
     # command: ["/bin/sh", "-c", "while ! nc -z discovery-service 8761; do sleep 1; done; java -jar app.jar"]
@@ -35,21 +37,23 @@ services:
       - "8082:8080" # 내부 포트 8080 확인!
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
       SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/caring_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: springproject
       SPRING_RABBITMQ_HOST: rabbitmq
-#    depends_on:
-#      mysql:
-#        condition: service_healthy # MySQL이 완전히 준비될 때까지 기다림 (MySQL 이미지에 HEALTHCHECK 설정 필요)
-#      discovery-server:
-#        condition: service_started
-#      config-server:
-#        condition: service_started
-#      rabbitmq:
-#        condition: service_healthy
+    #    depends_on:
+    #      mysql:
+    #        condition: service_healthy # MySQL이 완전히 준비될 때까지 기다림 (MySQL 이미지에 HEALTHCHECK 설정 필요)
+    #      discovery-server:
+    #        condition: service_started
+    #      config-server:
+    #        condition: service_started
+    #      rabbitmq:
+    #        condition: service_healthy
     networks:
       - caring-net
 
@@ -61,21 +65,23 @@ services:
       - "8081:8080" # 내부 포트 8080 확인!
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
       SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/caring_user?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: springproject
       SPRING_RABBITMQ_HOST: rabbitmq
-#    depends_on:
-#      mysql:
-#        condition: service_healthy
-#      discovery-server:
-#        condition: service_started
-#      config-server:
-#        condition: service_started
-#      rabbitmq:
-#        condition: service_healthy
+    #    depends_on:
+    #      mysql:
+    #        condition: service_healthy
+    #      discovery-server:
+    #        condition: service_started
+    #      config-server:
+    #        condition: service_started
+    #      rabbitmq:
+    #        condition: service_healthy
     networks:
       - caring-net
 
