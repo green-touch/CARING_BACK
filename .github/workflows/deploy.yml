@@ -1,0 +1,108 @@
+name: CI/CD to EC2 (Build Only)
+
+on:
+  push:
+    paths:
+      - 'CARING-Back-*/**'
+      - 'docker-compose-*.yml'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      JAR_DIRS: |
+        CARING-Back-Gateway
+        CARING-Back-Manager
+        CARING-Back-User
+        CARING-Back-Config
+        CARING-Back-Discovery
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Determine Changed Scope
+        id: detect
+        run: |
+          echo "changed_files<<EOF" >> $GITHUB_ENV
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+          LEVEL="none"
+          if grep -q "docker-compose-infra.yml" <<< "$changed_files"; then
+            LEVEL="infra"
+          elif grep -q "CARING-Back-Gateway\|CARING-Back-Manager\|CARING-Back-User\|docker-compose-outer-app.yml" <<< "$changed_files"; then
+            LEVEL="outer"
+          elif grep -q "CARING-Back-Config\|CARING-Back-Discovery\|docker-compose-inner-app.yml" <<< "$changed_files"; then
+            LEVEL="inner"
+          fi
+          echo "DEPLOY_LEVEL=$LEVEL" >> $GITHUB_ENV
+          echo "Detected change level: $LEVEL"
+
+      - name: Build Changed JARs (Skip Test)
+        if: env.DEPLOY_LEVEL != 'none'
+        run: |
+          for dir in $JAR_DIRS; do
+            if grep -q "$dir" <<< "$changed_files"; then
+              echo "Building $dir"
+              cd $dir
+              ./gradlew bootJar -x test
+              cd ..
+            fi
+          done
+
+      - name: Upload files to EC2
+        if: env.DEPLOY_LEVEL != 'none'
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          source: "."
+          target: "~/CARING_BACK"
+          rm: false
+
+      - name: SSH into EC2 and deploy Docker Compose
+        if: env.DEPLOY_LEVEL != 'none'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd ~/CARING_BACK
+
+            if [ ! -f .env ]; then
+              echo "❌ .env 파일이 존재하지 않아 배포 중단"
+              exit 1
+            fi
+
+            if [ "$DEPLOY_LEVEL" = "infra" ]; then
+              docker-compose -f docker-compose-infra.yml down
+              docker-compose -f docker-compose-infra.yml up -d --build
+
+              docker-compose -f docker-compose-outer-app.yml down
+              docker-compose -f docker-compose-outer-app.yml up -d --build
+
+              docker-compose -f docker-compose-inner-app.yml down
+              docker-compose -f docker-compose-inner-app.yml up -d --build
+
+            elif [ "$DEPLOY_LEVEL" = "outer" ]; then
+              docker-compose -f docker-compose-outer-app.yml down
+              docker-compose -f docker-compose-outer-app.yml up -d --build
+
+              docker-compose -f docker-compose-inner-app.yml down
+              docker-compose -f docker-compose-inner-app.yml up -d --build
+
+            elif [ "$DEPLOY_LEVEL" = "inner" ]; then
+              docker-compose -f docker-compose-inner-app.yml down
+              docker-compose -f docker-compose-inner-app.yml up -d --build
+            fi
