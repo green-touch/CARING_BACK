@@ -59,6 +59,7 @@ jobs:
             if echo "$changed_files" | grep -q "$dir"; then
               echo "📦 Building $dir"
               cd $dir
+              chmod +x gradlew  # ✅ 실행 권한 추가
               ./gradlew bootJar -x test
               cd ..
             fi
