@@ -1,4 +1,4 @@
-name: CI/CD to EC2 (Build Only)
+name: CI/CD to EC2 (only main branch)
 
 on:
   push:
@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # full git history needed for git diff
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -35,8 +37,7 @@ jobs:
         id: detect
         run: |
           echo "📦 Detecting changed files..."
-          changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
-          echo "Changed files:"
+          changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} || true)
           echo "$changed_files"
 
           level="none"
@@ -49,14 +50,14 @@ jobs:
           fi
 
           echo "DEPLOY_LEVEL=$level" >> $GITHUB_ENV
-          echo "✔ Detected level: $level"
+          echo "✔ Detected deploy level: $level"
 
-      - name: Build Changed JARs (Skip Test)
+      - name: Build Changed JARs (Skip Tests)
         if: env.DEPLOY_LEVEL != 'none'
         run: |
           for dir in $JAR_DIRS; do
             if echo "$changed_files" | grep -q "$dir"; then
-              echo "Building $dir"
+              echo "📦 Building $dir"
               cd $dir
               ./gradlew bootJar -x test
               cd ..
@@ -90,23 +91,38 @@ jobs:
             fi
 
             if [ "$DEPLOY_LEVEL" = "infra" ]; then
+              echo "🧱 Deploying infra..."
               docker-compose -f docker-compose-infra.yml down
+              sleep 2
               docker-compose -f docker-compose-infra.yml up -d --build
+              sleep 2
 
+              echo "🚪 Deploying outer..."
               docker-compose -f docker-compose-outer-app.yml down
+              sleep 2
               docker-compose -f docker-compose-outer-app.yml up -d --build
+              sleep 2
 
+              echo "🧩 Deploying inner..."
               docker-compose -f docker-compose-inner-app.yml down
+              sleep 2
               docker-compose -f docker-compose-inner-app.yml up -d --build
 
             elif [ "$DEPLOY_LEVEL" = "outer" ]; then
+              echo "🚪 Deploying outer..."
               docker-compose -f docker-compose-outer-app.yml down
+              sleep 2
               docker-compose -f docker-compose-outer-app.yml up -d --build
+              sleep 2
 
+              echo "🧩 Deploying inner..."
               docker-compose -f docker-compose-inner-app.yml down
+              sleep 2
               docker-compose -f docker-compose-inner-app.yml up -d --build
 
             elif [ "$DEPLOY_LEVEL" = "inner" ]; then
+              echo "🧩 Deploying inner..."
               docker-compose -f docker-compose-inner-app.yml down
+              sleep 2
               docker-compose -f docker-compose-inner-app.yml up -d --build
             fi
