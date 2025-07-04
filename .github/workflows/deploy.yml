@@ -2,6 +2,8 @@ name: CI/CD to EC2 (Build Only)
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'CARING-Back-*/**'
       - 'docker-compose-*.yml'
@@ -32,26 +34,28 @@ jobs:
       - name: Determine Changed Scope
         id: detect
         run: |
-          echo "changed_files<<EOF" >> $GITHUB_ENV
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }} >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          echo "📦 Detecting changed files..."
+          changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          echo "Changed files:"
+          echo "$changed_files"
 
-          LEVEL="none"
-          if grep -q "docker-compose-infra.yml" <<< "$changed_files"; then
-            LEVEL="infra"
-          elif grep -q "CARING-Back-Gateway\|CARING-Back-Manager\|CARING-Back-User\|docker-compose-outer-app.yml" <<< "$changed_files"; then
-            LEVEL="outer"
-          elif grep -q "CARING-Back-Config\|CARING-Back-Discovery\|docker-compose-inner-app.yml" <<< "$changed_files"; then
-            LEVEL="inner"
+          level="none"
+          if echo "$changed_files" | grep -q "docker-compose-infra.yml"; then
+            level="infra"
+          elif echo "$changed_files" | grep -qE "CARING-Back-(Gateway|Manager|User)|docker-compose-outer-app.yml"; then
+            level="outer"
+          elif echo "$changed_files" | grep -qE "CARING-Back-(Config|Discovery)|docker-compose-inner-app.yml"; then
+            level="inner"
           fi
-          echo "DEPLOY_LEVEL=$LEVEL" >> $GITHUB_ENV
-          echo "Detected change level: $LEVEL"
+
+          echo "DEPLOY_LEVEL=$level" >> $GITHUB_ENV
+          echo "✔ Detected level: $level"
 
       - name: Build Changed JARs (Skip Test)
         if: env.DEPLOY_LEVEL != 'none'
         run: |
           for dir in $JAR_DIRS; do
-            if grep -q "$dir" <<< "$changed_files"; then
+            if echo "$changed_files" | grep -q "$dir"; then
               echo "Building $dir"
               cd $dir
               ./gradlew bootJar -x test
