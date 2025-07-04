@@ -27,5 +27,5 @@ springdoc:
   api-docs:
     path: /v3/api-docs        # OpenAPI
   servers:
-    - url: http://localhost:8000/manager-service  # Gateway ?? + prefix
+    - url: http://localhost:8000/manager-service  # Gateway + prefix
       description: Gateway Manager-Service API
