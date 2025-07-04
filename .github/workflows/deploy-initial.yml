@@ -1,0 +1,78 @@
+name: Initial Full Deployment to EC2
+
+on:
+  workflow_dispatch:  # 수동 실행을 위해 사용
+
+jobs:
+  initial-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      JAR_DIRS: |
+        CARING-Back-Gateway
+        CARING-Back-Manager
+        CARING-Back-User
+        CARING-Back-Config
+        CARING-Back-Discovery
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build All JARs (Skip Tests)
+        run: |
+          for dir in $JAR_DIRS; do
+            echo "📦 Building $dir"
+            cd $dir
+            ./gradlew bootJar -x test
+            cd ..
+          done
+
+      - name: Upload files to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          source: "."
+          target: "~/CARING_BACK"
+          rm: false
+
+      - name: SSH into EC2 and deploy ALL Compose (infra → outer → inner)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd ~/CARING_BACK
+
+            if [ ! -f .env ]; then
+              echo "❌ .env 파일이 존재하지 않아 배포를 중단합니다."
+              exit 1
+            fi
+
+            echo "🧱 Deploying infra..."
+            docker-compose -f docker-compose-infra.yml down
+            sleep 2
+            docker-compose -f docker-compose-infra.yml up -d --build
+            sleep 2
+
+            echo "🚪 Deploying outer..."
+            docker-compose -f docker-compose-outer-app.yml down
+            sleep 2
+            docker-compose -f docker-compose-outer-app.yml up -d --build
+            sleep 2
+
+            echo "🧩 Deploying inner..."
+            docker-compose -f docker-compose-inner-app.yml down
+            sleep 2
+            docker-compose -f docker-compose-inner-app.yml up -d --build
