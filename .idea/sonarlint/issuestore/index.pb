@@ -54,3 +54,11 @@ x
 Hjava/com/caring/manager_service/domain/authority/entity/DefaultAuth.java,a/5/a5633f0d6532adde9cf6cd3d7d8ff5b7be144740
 v
 Fjava/com/caring/manager_service/domain/authority/entity/SuperAuth.java,9/d/9d6cca6690edd8e90830db29bc5fec75209984d2
+‰
+Yjava/com/caring/manager_service/domain/authority/repository/SuperAuthorityRepository.java,b/6/b6763de99a18911ba6a29c4e2d7ceb91a0fc7442
+‹
+[java/com/caring/manager_service/domain/authority/repository/DefaultAuthorityRepository.java,b/e/beaea49618fd384140a4f914d819ac3bce244d7e
+…
+Ujava/com/caring/manager_service/domain/authority/entity/PersonalDefaultAuthority.java,c/3/c39faf6ec1ba407ba62f1bf4ff0fe37ef9697c5f
+ƒ
+Sjava/com/caring/manager_service/domain/authority/entity/PersonalSuperAuthority.java,b/3/b34929e14df66b2106e54633d7162c27e3b27a20
