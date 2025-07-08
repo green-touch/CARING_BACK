@@ -2,8 +2,6 @@ package com.caring.manager_service.presentation.manager.service;
 
 import com.caring.manager_service.common.AuthorityDataInitializer;
 import com.caring.manager_service.common.service.DatabaseCleanUp;
-import com.caring.manager_service.domain.manager.entity.Submission;
-import com.caring.manager_service.domain.manager.repository.SubmissionRepository;
 import com.caring.manager_service.presentation.manager.vo.request.RequestManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;

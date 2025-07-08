@@ -6,8 +6,6 @@ import com.caring.manager_service.domain.authority.business.adaptor.AuthorityAda
 import com.caring.manager_service.domain.authority.entity.Authority;
 import com.caring.manager_service.domain.authority.entity.ManagerRole;
 import com.caring.manager_service.domain.manager.entity.Manager;
-import com.caring.manager_service.domain.manager.entity.Submission;
-import com.caring.manager_service.domain.manager.repository.SubmissionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

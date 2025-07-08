@@ -2,10 +2,7 @@ package com.caring.manager_service.domain.manager.business.adaptor;
 
 import com.caring.manager_service.common.service.DatabaseCleanUp;
 import com.caring.manager_service.domain.manager.entity.Manager;
-import com.caring.manager_service.domain.manager.entity.Submission;
-import com.caring.manager_service.domain.manager.entity.SubmissionStatus;
 import com.caring.manager_service.domain.manager.repository.ManagerRepository;
-import com.caring.manager_service.domain.manager.repository.SubmissionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

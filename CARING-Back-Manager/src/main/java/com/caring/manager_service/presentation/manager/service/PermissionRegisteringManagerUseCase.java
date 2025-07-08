@@ -7,7 +7,6 @@ import com.caring.manager_service.domain.manager.business.adaptor.ManagerAdaptor
 import com.caring.manager_service.domain.manager.business.service.ManagerDomainService;
 import com.caring.manager_service.domain.manager.business.validator.ManagerValidator;
 import com.caring.manager_service.domain.manager.entity.Manager;
-import com.caring.manager_service.domain.manager.entity.Submission;
 import com.caring.manager_service.domain.shelter.business.service.ShelterDomainService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
