@@ -1,8 +1,6 @@
 package com.caring.manager_service.domain.manager.business.service;
 
 import com.caring.manager_service.common.annotation.DomainService;
-import com.caring.manager_service.domain.authority.entity.Authority;
-import com.caring.manager_service.domain.authority.entity.ManagerAuthority;
 import com.caring.manager_service.domain.manager.business.validator.ManagerValidator;
 import com.caring.manager_service.domain.manager.entity.Manager;
 import com.caring.manager_service.domain.manager.entity.ManagerGroup;
@@ -26,7 +24,7 @@ public class ManagerDomainServiceImpl implements ManagerDomainService{
     private final ManagerValidator managerValidator;
 
     @Override
-    public Manager registerManager(String name, String password, Authority authority) {
+    public Manager registerManager(String name, String password) {
 
         managerValidator.checkName(name);
         managerValidator.checkPassword(password);
@@ -37,11 +35,7 @@ public class ManagerDomainServiceImpl implements ManagerDomainService{
                 .name(name)
                 .password(passwordEncoder.encode(password))
                 .build();
-        ManagerAuthority.builder()
-                .manager(newManager)
-                .authority(authority)
-                .build()
-                .link(newManager);
+
 
         return managerRepository.save(newManager);
     }

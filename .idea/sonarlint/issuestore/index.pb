@@ -40,3 +40,7 @@ Yjava/com/caring/manager_service/domain/manager/business/service/ManagerDomainSe
 Sjava/com/caring/manager_service/domain/manager/business/adaptor/ManagerAdaptor.java,a/1/a137f653a419661ff9b27c1b4eb245690c978a74
 ‡
 Wjava/com/caring/manager_service/domain/manager/business/adaptor/ManagerAdaptorImpl.java,9/2/928844f1d666af984e9a3316e31c8d5aca85f65b
+‹
+[java/com/caring/manager_service/domain/manager/business/validator/ManagerValidatorImpl.java,b/c/bc644f3eea4b372f155508ecaad556ae3eb1c98a
+‡
+Wjava/com/caring/manager_service/domain/manager/business/validator/ManagerValidator.java,3/6/36cec23af8b6bb70bc5723540248632c039ff407

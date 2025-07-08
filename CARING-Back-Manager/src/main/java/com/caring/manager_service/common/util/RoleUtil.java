@@ -1,7 +1,5 @@
 package com.caring.manager_service.common.util;
 
-import com.caring.manager_service.domain.authority.entity.ManagerRole;
-
 import java.util.List;
 
 public class RoleUtil {

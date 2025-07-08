@@ -2,7 +2,6 @@ package com.caring.manager_service.presentation.manager.service;
 
 import com.caring.manager_service.common.AuthorityDataInitializer;
 import com.caring.manager_service.common.service.DatabaseCleanUp;
-import com.caring.manager_service.domain.authority.entity.ManagerRole;
 import com.caring.manager_service.domain.manager.entity.Manager;
 import com.caring.manager_service.domain.manager.repository.ManagerRepository;
 import com.caring.manager_service.domain.shelter.entity.Shelter;

@@ -1,8 +1,5 @@
 package com.caring.manager_service.common;
 
-import com.caring.manager_service.domain.authority.entity.Authority;
-import com.caring.manager_service.domain.authority.entity.ManagerRole;
-import com.caring.manager_service.domain.authority.repository.AuthorityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

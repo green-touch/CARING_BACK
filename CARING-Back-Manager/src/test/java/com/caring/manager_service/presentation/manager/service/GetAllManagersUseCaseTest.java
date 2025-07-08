@@ -2,9 +2,6 @@ package com.caring.manager_service.presentation.manager.service;
 
 import com.caring.manager_service.common.AuthorityDataInitializer;
 import com.caring.manager_service.common.service.DatabaseCleanUp;
-import com.caring.manager_service.domain.authority.business.adaptor.AuthorityAdaptor;
-import com.caring.manager_service.domain.authority.entity.Authority;
-import com.caring.manager_service.domain.authority.entity.ManagerRole;
 import com.caring.manager_service.domain.manager.business.service.ManagerDomainService;
 import com.caring.manager_service.presentation.manager.vo.response.ResponseSpecificManager;
 import lombok.extern.slf4j.Slf4j;

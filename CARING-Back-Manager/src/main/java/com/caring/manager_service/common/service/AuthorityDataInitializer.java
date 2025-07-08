@@ -1,8 +1,5 @@
 package com.caring.manager_service.common.service;
 
-import com.caring.manager_service.domain.authority.entity.Authority;
-import com.caring.manager_service.domain.authority.entity.ManagerRole;
-import com.caring.manager_service.domain.authority.repository.AuthorityRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;

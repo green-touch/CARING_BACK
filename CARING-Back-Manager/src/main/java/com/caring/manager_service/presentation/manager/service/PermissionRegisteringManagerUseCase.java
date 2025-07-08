@@ -1,8 +1,6 @@
 package com.caring.manager_service.presentation.manager.service;
 
 import com.caring.manager_service.common.annotation.UseCase;
-import com.caring.manager_service.domain.authority.business.adaptor.AuthorityAdaptor;
-import com.caring.manager_service.domain.authority.entity.ManagerRole;
 import com.caring.manager_service.domain.manager.business.adaptor.ManagerAdaptor;
 import com.caring.manager_service.domain.manager.business.service.ManagerDomainService;
 import com.caring.manager_service.domain.manager.business.validator.ManagerValidator;

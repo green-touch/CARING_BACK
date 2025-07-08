@@ -1,8 +1,6 @@
 package com.caring.manager_service.domain.authority.business.adaptor;
 
 import com.caring.manager_service.common.AuthorityDataInitializer;
-import com.caring.manager_service.domain.authority.entity.Authority;
-import com.caring.manager_service.domain.authority.entity.ManagerRole;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
