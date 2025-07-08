@@ -1,0 +1,37 @@
+name: Auto Compose Up on EC2 Restart
+
+on:
+  workflow_dispatch:  # 수동 실행용 트리거
+
+jobs:
+  compose-up:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SSH into EC2 and start all Compose (infra → outer → inner)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd ~/CARING_BACK
+
+            if [ ! -f .env ]; then
+              echo "❌ .env 파일이 존재하지 않아 실행을 중단합니다."
+              exit 1
+            fi
+
+            echo "🔧 docker-compose-infra.yml 시작"
+            docker-compose -f docker-compose-infra.yml up -d
+            sleep 3
+
+            echo "🔧 docker-compose-outer-app.yml 시작"
+            docker-compose -f docker-compose-outer-app.yml up -d
+            sleep 3
+
+            echo "🔧 docker-compose-inner-app.yml 시작"
+            docker-compose -f docker-compose-inner-app.yml up -d
+            sleep 3
+
+            echo "✅ 모든 Compose가 정상적으로 실행되었습니다."
