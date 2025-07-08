@@ -44,3 +44,13 @@ Wjava/com/caring/manager_service/domain/manager/business/adaptor/ManagerAdaptorI
 [java/com/caring/manager_service/domain/manager/business/validator/ManagerValidatorImpl.java,b/c/bc644f3eea4b372f155508ecaad556ae3eb1c98a
 ‡
 Wjava/com/caring/manager_service/domain/manager/business/validator/ManagerValidator.java,3/6/36cec23af8b6bb70bc5723540248632c039ff407
+{
+Kjava/com/caring/manager_service/domain/authority/entity/SuperAuthority.java,c/1/c1e3f46e9364ec71fd25c08fd31ffde92ee03512
+p
+@java/com/caring/manager_service/common/config/SwaggerConfig.java,9/5/956f126a2d5fd05dc52e3f66cdfa3056ec02c9b5
+}
+Mjava/com/caring/manager_service/domain/authority/entity/DefaultAuthority.java,e/f/ef9326c5bc266b1bc2ee0e6de38a3a34de0df2c0
+x
+Hjava/com/caring/manager_service/domain/authority/entity/DefaultAuth.java,a/5/a5633f0d6532adde9cf6cd3d7d8ff5b7be144740
+v
+Fjava/com/caring/manager_service/domain/authority/entity/SuperAuth.java,9/d/9d6cca6690edd8e90830db29bc5fec75209984d2
