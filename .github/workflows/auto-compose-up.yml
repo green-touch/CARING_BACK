@@ -1,20 +1,22 @@
 name: Auto Compose Up on EC2 Restart
 
 on:
-  workflow_dispatch:  # 수동 실행용 트리거
+  workflow_dispatch:
 
 jobs:
   compose-up:
     runs-on: ubuntu-latest
 
     steps:
-      - name: SSH into EC2 and start all Compose (infra → outer → inner)
+      - name: SSH into EC2 and restart all Compose (clean & rebuild)
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
+            set -e  # 하나라도 실패 시 전체 종료
+
             cd ~/CARING_BACK
 
             if [ ! -f .env ]; then
@@ -22,16 +24,23 @@ jobs:
               exit 1
             fi
 
-            echo "🔧 docker-compose-infra.yml 시작"
-            docker-compose -f docker-compose-infra.yml up -d
-            sleep 3
+            echo "🧹 모든 docker-compose 앱 중단 및 정리"
+            docker-compose -f docker-compose-inner-app.yml down --rmi all --volumes --remove-orphans || true
+            docker-compose -f docker-compose-outer-app.yml down --rmi all --volumes --remove-orphans || true
+            docker-compose -f docker-compose-infra.yml down --rmi all --volumes --remove-orphans || true
 
-            echo "🔧 docker-compose-outer-app.yml 시작"
-            docker-compose -f docker-compose-outer-app.yml up -d
-            sleep 3
+            sleep 5
 
-            echo "🔧 docker-compose-inner-app.yml 시작"
-            docker-compose -f docker-compose-inner-app.yml up -d
-            sleep 3
+            echo "🔧 infra 재시작"
+            docker-compose -f docker-compose-infra.yml up -d --build
+            sleep 5
 
-            echo "✅ 모든 Compose가 정상적으로 실행되었습니다."
+            echo "🚪 outer 재시작"
+            docker-compose -f docker-compose-outer-app.yml up -d --build
+            sleep 5
+
+            echo "🧩 inner 재시작"
+            docker-compose -f docker-compose-inner-app.yml up -d --build
+            sleep 5
+
+            echo "✅ 모든 Compose가 캐시 삭제 후 정상적으로 재시작되었습니다."
