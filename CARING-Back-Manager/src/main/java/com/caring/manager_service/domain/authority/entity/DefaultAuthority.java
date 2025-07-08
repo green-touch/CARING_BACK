@@ -21,5 +21,4 @@ public class DefaultAuthority extends BaseTimeEntity {
     @Column(name = "default_auth", nullable = false)
     @Enumerated(EnumType.STRING)
     private DefaultAuth defaultAuth;
-
 }
