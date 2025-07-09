@@ -1,6 +1,7 @@
 package com.caring.manager_service.domain.manager.entity;
 
 import com.caring.manager_service.domain.auditing.entity.BaseTimeEntity;
+import com.caring.manager_service.domain.authority.entity.PersonalSuperAuthority;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,10 +48,19 @@ public class Manager extends BaseTimeEntity implements UserDetails {
     private String name;
     private String shelterUuid;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "manager", cascade = CascadeType.PERSIST)
+    private List<PersonalSuperAuthority> personalSuperAuthorityList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return personalSuperAuthorityList.stream()
+                .map(personalSuperAuthority ->
+                        new SimpleGrantedAuthority(
+                                personalSuperAuthority.getSuperAuthority().getSuperAuth().getKey()
+                        )
+                )
+                .collect(Collectors.toList());
     }
 
     @Override

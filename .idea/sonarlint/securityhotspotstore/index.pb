@@ -78,3 +78,9 @@ Vjava/com/caring/user_service/presentation/user/controller/UserAccessApiControll
 Pjava/com/caring/user_service/presentation/user/controller/UserApiController.java,9/6/961b501dbce1b211e5e28bc4740da64be3429d86
 Ç
 Rjava/com/caring/manager_service/domain/authority/converter/SuperAuthConverter.java,c/d/cd97a0d130cd2a6cd9b093531967b616f0208aa1
+ç
+]java/com/caring/manager_service/domain/authority/business/service/AuthorityDoaminService.java,4/1/41f386826c9be39826799a1b0b6060473f49332d
+ë
+ajava/com/caring/manager_service/domain/authority/business/service/AuthorityDomainServiceImpl.java,9/c/9c9ec50d9d73687b96bf6aa7c94ec5e24d48e843
+ç
+]java/com/caring/manager_service/domain/authority/business/service/AuthorityDomainService.java,d/3/d3e1cf3a6e3b3c67a56e0dac93976ec370141dd2

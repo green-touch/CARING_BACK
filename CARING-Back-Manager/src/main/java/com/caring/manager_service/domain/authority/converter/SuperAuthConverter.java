@@ -1,7 +1,5 @@
 package com.caring.manager_service.domain.authority.converter;
 
-import com.caring.manager_service.domain.authority.entity.DefaultAuth;
-import com.caring.manager_service.domain.authority.entity.DefaultAuthority;
 import com.caring.manager_service.domain.authority.entity.SuperAuth;
 import com.caring.manager_service.domain.authority.entity.SuperAuthority;
 

@@ -20,7 +20,7 @@ public class SuperAuthority {
     @Column(name = "super_authority_id")
     private Long id;
 
-    @Column(name = "default_auth", nullable = false)
+    @Column(name = "default_auth", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
     private SuperAuth superAuth;
 }
