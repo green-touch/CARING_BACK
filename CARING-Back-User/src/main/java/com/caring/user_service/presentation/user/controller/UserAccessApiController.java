@@ -1,8 +1,11 @@
 package com.caring.user_service.presentation.user.controller;
 
+import com.caring.user_service.presentation.user.service.FindMyMemberCodeUseCase;
 import com.caring.user_service.presentation.user.service.ReadAllUserUseCase;
 import com.caring.user_service.presentation.user.service.RegisterUserUseCase;
+import com.caring.user_service.presentation.user.vo.RequestMemberCode;
 import com.caring.user_service.presentation.user.vo.RequestUser;
+import com.caring.user_service.presentation.user.vo.ResponseMemberCode;
 import com.caring.user_service.presentation.user.vo.ResponseUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +26,7 @@ public class UserAccessApiController {
 
     private final RegisterUserUseCase registerUserUseCase;
     private final ReadAllUserUseCase readAllUserUseCase;
+    private final FindMyMemberCodeUseCase findMyMemberCodeUseCase;
 
     @Operation(summary = "새로운 유저를 등록합니다.")
     @PostMapping("/register")
@@ -34,5 +38,11 @@ public class UserAccessApiController {
     @GetMapping
     public List<ResponseUser> getAllUser() {
         return readAllUserUseCase.execute();
+    }
+
+    @PostMapping("/my/member-code")
+    @Operation(summary = "핸드폰 인증을 통해 내 memberCode를 조회합니다.")
+    public ResponseMemberCode findMyMemberCode(@RequestBody RequestMemberCode request) {
+        return findMyMemberCodeUseCase.execute(request);
     }
 }
