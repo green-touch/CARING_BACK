@@ -22,42 +22,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthorityDomainServiceImpl implements AuthorityDomainService{
 
-    private final SuperAuthorityRepository superAuthorityRepository;
     private final PersonalSuperAuthorityRepository personalSuperAuthorityRepository;
+
     @Override
-    public Long switchSuperAuthority(Manager manager, List<SuperAuth> activeSuperAuths) {
-        Set<SuperAuth> currentSuperAuthority =
-                personalSuperAuthorityRepository.findByManager(manager).stream()
-                        .map(personalSuperAuthority -> personalSuperAuthority.getSuperAuthority().getSuperAuth())
-                        .collect(Collectors.toSet());
-
-        Set<SuperAuth> activeSuperAuthSet = new HashSet<>(activeSuperAuths);
-
-        // BLACK LIST
-        List<SuperAuth> blackList = currentSuperAuthority.stream()
-                .filter(csa -> !activeSuperAuthSet.contains(csa))
-                .collect(Collectors.toList());
-
-        // WHITE LIST
-        List<SuperAuthority> whiteList = activeSuperAuthSet.stream()
-                .filter(asa -> !currentSuperAuthority.contains(asa))
-                .map(asa -> superAuthorityRepository.findBySuperAuth(asa)
-                        .orElseThrow(() -> new RuntimeException("not found super auth")))
-                .collect(Collectors.toList());
-
-        List<PersonalSuperAuthority> save = new ArrayList<>();
-        for (SuperAuthority superAuthority : whiteList) {
-            save.add(
+    public void saveAllActiveSuperAuthority(Manager manager, List<SuperAuthority> activeSuperAuthorityList) {
+        List<PersonalSuperAuthority> savePersonalAuth = new ArrayList<>();
+        for (SuperAuthority superAuthority : activeSuperAuthorityList) {
+            savePersonalAuth.add(
                     PersonalSuperAuthority.builder()
                             .superAuthority(superAuthority)
                             .manager(manager)
                             .build()
             );
         }
+        personalSuperAuthorityRepository.saveAll(savePersonalAuth);
+    }
 
-        personalSuperAuthorityRepository.deleteBySuperAuthIn(blackList);
-        personalSuperAuthorityRepository.saveAll(save);
-
-        return manager.getId();
+    @Override
+    public void removeAllUnActiveSuperAuthority(Manager manager, List<SuperAuth> unactiveSuperAuthList) {
+        personalSuperAuthorityRepository.deleteBySuperAuthIn(unactiveSuperAuthList);
     }
 }

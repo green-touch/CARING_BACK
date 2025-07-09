@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface AuthorityDomainService {
 
-    Long switchSuperAuthority(Manager manager, List<SuperAuth> activeSuperAuths);
+    void saveAllActiveSuperAuthority(Manager manager, List<SuperAuthority> activeSuperAuthorityList);
+
+    void removeAllUnActiveSuperAuthority(Manager manager, List<SuperAuth> unactiveSuperAuthList);
 }

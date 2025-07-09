@@ -84,3 +84,9 @@ Rjava/com/caring/manager_service/domain/authority/converter/SuperAuthConverter.j
 ajava/com/caring/manager_service/domain/authority/business/service/AuthorityDomainServiceImpl.java,9/c/9c9ec50d9d73687b96bf6aa7c94ec5e24d48e843
 ç
 ]java/com/caring/manager_service/domain/authority/business/service/AuthorityDomainService.java,d/3/d3e1cf3a6e3b3c67a56e0dac93976ec370141dd2
+~
+Njava/com/caring/manager_service/presentation/auth/service/SwitchSuperAuth.java,6/d/6d9b0a28c86d44bfccea7f59e77f289cbf928000
+á
+Wjava/com/caring/manager_service/domain/authority/business/adaptor/AuthorityAdaptor.java,2/8/28f0e76feb081996d23d1575e5507be039c36d68
+ã
+[java/com/caring/manager_service/domain/authority/business/adaptor/AuthorityAdaptorImpl.java,5/9/59660d197e5bbb72f6c80f29235a7b5d82cccfca
