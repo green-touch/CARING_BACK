@@ -3,14 +3,13 @@ package com.caring.manager_service.presentation.auth.service;
 import com.caring.manager_service.common.annotation.UseCase;
 import com.caring.manager_service.domain.authority.business.adaptor.AuthorityAdaptor;
 import com.caring.manager_service.domain.authority.business.service.AuthorityDomainService;
-import com.caring.manager_service.domain.authority.entity.PersonalSuperAuthority;
 import com.caring.manager_service.domain.authority.entity.SuperAuth;
 import com.caring.manager_service.domain.authority.entity.SuperAuthority;
+import com.caring.manager_service.domain.manager.business.adaptor.ManagerAdaptor;
 import com.caring.manager_service.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,12 +18,17 @@ import java.util.stream.Collectors;
 @UseCase
 @Transactional
 @RequiredArgsConstructor
-public class SwitchSuperAuth {
+public class SwitchSuperAuthUseCase {
 
+    private final ManagerAdaptor managerAdaptor;
     private final AuthorityAdaptor authorityAdaptor;
     private final AuthorityDomainService authorityDomainService;
 
-    public void execute(Manager manager, List<SuperAuth> activeSuperAuths){
+    public void execute(String managerUuid, List<SuperAuth> activeSuperAuths){
+        // 1. FIND MANAGER
+        Manager manager = managerAdaptor.queryByManagerUuid(managerUuid);
+
+        // 2. READY CUR_AUTH & ACTIVE_AUTH
         Set<SuperAuth> currentSuperAuth =
                 authorityAdaptor.queryCurrentPersonalSuperAuthority(manager).stream()
                         .map(psa -> psa.getSuperAuthority().getSuperAuth())

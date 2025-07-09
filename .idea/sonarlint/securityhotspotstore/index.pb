@@ -90,3 +90,9 @@ Njava/com/caring/manager_service/presentation/auth/service/SwitchSuperAuth.java
 Wjava/com/caring/manager_service/domain/authority/business/adaptor/AuthorityAdaptor.java,2/8/28f0e76feb081996d23d1575e5507be039c36d68
 ã
 [java/com/caring/manager_service/domain/authority/business/adaptor/AuthorityAdaptorImpl.java,5/9/59660d197e5bbb72f6c80f29235a7b5d82cccfca
+ç
+]java/com/caring/manager_service/presentation/auth/controller/SuperAuthorityApiController.java,5/b/5b7ec615c6ca88ff76c24b0201ab383dad02eed6
+i
+9java/com/caring/manager_service/common/util/RoleUtil.java,f/d/fd50bdc9651bfcb24d0345e1b03cadd4585ff646
+Ö
+Ujava/com/caring/manager_service/presentation/auth/service/SwitchSuperAuthUseCase.java,f/2/f2b92412c9885a440198ccd8074d4d4980be68a2
