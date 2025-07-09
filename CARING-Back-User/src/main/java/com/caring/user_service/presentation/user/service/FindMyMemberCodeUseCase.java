@@ -18,6 +18,6 @@ public class FindMyMemberCodeUseCase {
         User user = userAdaptor.queryUserByNameAndBirthDateAndPhoneNumber(request.getName(),
                 request.getBirthDate(), request.getPhoneNumber());
 
-        return new ResponseMemberCode(user.getMemberCode());
+        return new ResponseMemberCode(user.getName(), user.getMemberCode());
     }
 }

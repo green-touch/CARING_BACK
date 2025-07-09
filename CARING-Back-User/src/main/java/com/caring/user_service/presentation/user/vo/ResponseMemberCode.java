@@ -8,5 +8,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ResponseMemberCode {
+    private final String name;
     private final String memberCode;
 }
