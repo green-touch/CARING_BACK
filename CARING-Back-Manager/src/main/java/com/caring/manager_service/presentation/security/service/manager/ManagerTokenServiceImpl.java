@@ -3,7 +3,6 @@ package com.caring.manager_service.presentation.security.service.manager;
 import com.caring.manager_service.common.service.RedisService;
 import com.caring.manager_service.domain.manager.business.adaptor.ManagerAdaptor;
 import com.caring.manager_service.domain.manager.entity.Manager;
-import com.caring.manager_service.presentation.manager.service.ManagerLoginUseCase;
 import com.caring.manager_service.presentation.security.vo.JwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -35,22 +34,19 @@ public class ManagerTokenServiceImpl implements ManagerTokenService {
     private final Environment env;
     private final RedisService redisService;
     private final ManagerAdaptor managerAdaptor;
-    private final ManagerLoginUseCase managerLoginUseCase;
 
     public ManagerTokenServiceImpl(Environment environment,
                                    RedisService redisService,
-                                   ManagerAdaptor managerAdaptor,
-                                   ManagerLoginUseCase managerLoginUseCase) {
+                                   ManagerAdaptor managerAdaptor) {
         byte[] keyBytes = Decoders.BASE64.decode(environment.getProperty("token.secret-manager"));
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.env = environment;
         this.redisService = redisService;
         this.managerAdaptor = managerAdaptor;
-        this.managerLoginUseCase = managerLoginUseCase;
     }
     @Override
     public JwtToken login(String memberCode, String password) {
-        Manager manager = managerLoginUseCase.execute(memberCode, password);
+        Manager manager = managerAdaptor.queryByMemberCode(memberCode);
         return generateToken(
                 new UsernamePasswordAuthenticationToken(manager, "", manager.getAuthorities())
         );

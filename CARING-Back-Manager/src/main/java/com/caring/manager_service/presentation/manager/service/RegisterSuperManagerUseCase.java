@@ -12,13 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegisterSuperManagerUseCase {
 
     private final ManagerDomainService managerDomainService;
-    private final AuthorityAdaptor authorityAdaptor;
 
     public Long execute(RequestManager requestManager) {
-        return managerDomainService.registerManager(
-                requestManager.getName(),
-                requestManager.getPassword(),
-                authorityAdaptor.queryByManagerRole(ManagerRole.SUPER)
-                ).getId();
+        managerDomainService.registerManager(requestManager.getName(), requestManager.getPassword());
+        return null;
     }
 }
