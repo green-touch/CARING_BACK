@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -85,5 +86,13 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     public void groupedInShelter(String shelterUuid) {
         this.shelterUuid = shelterUuid;
+    }
+
+    public boolean isSamePassword(String encodedPassword) {
+        return Objects.equals(this.password, encodedPassword);
+    }
+
+    public void changePassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

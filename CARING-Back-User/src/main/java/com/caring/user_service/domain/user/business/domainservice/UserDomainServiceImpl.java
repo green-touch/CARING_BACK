@@ -51,4 +51,12 @@ public class UserDomainServiceImpl implements UserDomainService {
                 .build();
         return userRepository.save(newUser);
     }
+
+    @Override
+    public void resetPassword(User user, String encodedPassword) {
+        if (user.isSamePassword(encodedPassword)) {
+            throw new IllegalArgumentException("이전에 사용한 비밀번호와 동일합니다.");
+        }
+        user.changePassword(encodedPassword);
+    }
 }
