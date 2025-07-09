@@ -9,6 +9,7 @@ import com.caring.manager_service.domain.authority.repository.SuperAuthorityRepo
 import com.caring.manager_service.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,5 +30,10 @@ public class AuthorityAdaptorImpl implements AuthorityAdaptor{
     public SuperAuthority queryBySuperAuth(SuperAuth superAuth) {
         return superAuthorityRepository.findBySuperAuth(superAuth)
                 .orElseThrow(() -> new RuntimeException("not found super authority"));
+    }
+
+    @Override
+    public List<SuperAuthority> queryAllSuperAuthority() {
+        return superAuthorityRepository.findAll();
     }
 }

@@ -4,7 +4,6 @@ import com.caring.manager_service.common.annotation.ManagerRoles;
 import com.caring.manager_service.common.util.RoleUtil;
 import com.caring.manager_service.domain.authority.entity.SuperAuth;
 import com.caring.manager_service.presentation.manager.service.RegisterDefaultManagerBySuperManagerUseCase;
-import com.caring.manager_service.presentation.manager.service.RegisterSuperManagerUseCase;
 import com.caring.manager_service.presentation.manager.vo.request.RequestManager;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/api/access/managers")
+@RequestMapping("/v1/api/managers")
 @RequiredArgsConstructor
-public class ManagerAccessApiController {
+public class ManagerApiController {
 
-    private final RegisterSuperManagerUseCase registerSuperManagerUseCase;
+    private final RegisterDefaultManagerBySuperManagerUseCase registerDefaultManagerBySuperManagerUseCase;
 
-    @Operation(summary = "super 권한을 모두 가진 manager를 생성합니다. 테스트용입니다.")
-    @PostMapping("/super")
-    public Long registerSuperManager(@RequestBody RequestManager requestManager) {
-        return registerSuperManagerUseCase.execute(requestManager);
+    @Operation(summary = "일반 매니저 계정을 생성합니다. 이때 생성자는 매니저 생성 권한이 필요합니다.")
+    @PostMapping("/default")
+    public Long registerDefaultManagerBySuper(@ManagerRoles List<String> roles,
+                                              @RequestBody RequestManager requestManager) {
+        RoleUtil.containManagerRole(SuperAuth.CREATE_MANAGER_ACCOUNT, roles);
+        return registerDefaultManagerBySuperManagerUseCase.execute(requestManager);
     }
 }

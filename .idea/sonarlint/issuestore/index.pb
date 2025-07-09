@@ -130,3 +130,5 @@ Yjava/com/caring/manager_service/presentation/manager/service/ManagerAccessContr
 \java/com/caring/manager_service/presentation/manager/service/ManagerAccessApiController.java,a/e/aedd2cdd93d5a7e9641883ee3f37c1544af2a83b
 É
 Sjava/com/caring/manager_service/presentation/manager/vo/request/RequestManager.java,5/5/5585ec97ea8a2399fc4394879bb9c0f592d15e3e
+ù
+mjava/com/caring/manager_service/presentation/manager/service/RegisterDefaultManagerBySuperManagerUseCase.java,6/c/6c6dc84906503e3cf45f6e49722fc72f2c50a8ad
