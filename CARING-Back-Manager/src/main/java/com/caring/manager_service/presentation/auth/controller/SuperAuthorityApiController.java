@@ -7,6 +7,8 @@ import com.caring.manager_service.presentation.auth.service.SwitchSuperAuthUseCa
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,10 +23,11 @@ public class SuperAuthorityApiController {
 
     @Operation(summary = "특정 매니저를 권한 조정합니다.")
     @PatchMapping("/{managerUuid}")
-    public void switchSuperAuth(@PathVariable String managerUuid,
-                                @RequestParam List<SuperAuth> superAuthList,
-                                @ManagerRoles List<String> roles) {
+    public ResponseEntity<String> switchSuperAuth(@PathVariable String managerUuid,
+                         @RequestParam List<SuperAuth> superAuthList,
+                         @ManagerRoles List<String> roles) {
         RoleUtil.containManagerRole(SuperAuth.GRANT_SUPER_MANAGER_PERMISSION, roles);
         switchSuperAuthUseCase.execute(managerUuid, superAuthList);
+        return ResponseEntity.ok(HttpStatus.OK.toString());
     }
 }

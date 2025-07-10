@@ -3,7 +3,7 @@ package com.caring.manager_service.presentation.security.service.manager;
 import com.caring.manager_service.common.service.RedisService;
 import com.caring.manager_service.domain.manager.business.adaptor.ManagerAdaptor;
 import com.caring.manager_service.domain.manager.entity.Manager;
-import com.caring.manager_service.presentation.manager.controller.ManagerLoginUseCase;
+import com.caring.manager_service.presentation.manager.service.ManagerLoginUseCase;
 import com.caring.manager_service.presentation.security.vo.JwtToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

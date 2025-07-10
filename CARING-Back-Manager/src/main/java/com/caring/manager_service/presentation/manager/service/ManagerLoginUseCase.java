@@ -1,4 +1,4 @@
-package com.caring.manager_service.presentation.manager.controller;
+package com.caring.manager_service.presentation.manager.service;
 
 import com.caring.manager_service.common.annotation.UseCase;
 import com.caring.manager_service.domain.manager.business.adaptor.ManagerAdaptor;
