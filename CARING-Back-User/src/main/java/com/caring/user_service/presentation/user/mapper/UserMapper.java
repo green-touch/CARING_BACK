@@ -2,6 +2,7 @@ package com.caring.user_service.presentation.user.mapper;
 
 import com.caring.user_service.domain.user.entity.User;
 import com.caring.user_service.presentation.user.vo.ResponseUser;
+import com.caring.user_service.presentation.user.vo.ResponseUserHomeInfo;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 
@@ -15,5 +16,7 @@ public interface UserMapper {
 //    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     ResponseUser toResponseUserVo(User user);
+
+    ResponseUserHomeInfo toResponseUserHomeInfoVo(User user);
 
 }
