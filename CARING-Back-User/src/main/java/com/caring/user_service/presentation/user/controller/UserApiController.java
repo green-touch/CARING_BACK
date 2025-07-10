@@ -68,4 +68,11 @@ public class UserApiController {
     public ResponseUserShelterUuid getUserShelterUuid(@PathVariable String userUuid) {
         return getUserShelterUuidUseCase.execute(userUuid);
     }
+
+    @Operation(summary = "유저가 비상연락망 직접 추가 beta (관리자가 추가 하는건 권한 문제 해결후 처리예정)")
+    @PostMapping("/emergency-contacts")
+    public ResponseEntity<Void> saveEmergencyContacts (@RequestBody RequestEmergencyContact request) {
+        addEmergencyContactsUseCase.execute(request);
+        return ResponseEntity.ok().build();
+    }
 }
