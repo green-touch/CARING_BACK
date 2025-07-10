@@ -166,3 +166,11 @@ Ijava/com/caring/manager_service/common/external/user/UserFeignClient.java,c/a/
 \java/com/caring/manager_service/presentation/manager/vo/response/ResponseManagerAccount.java,a/3/a39cdf5bbeee6916b9726f1c401294fab939d768
 ë
 ajava/com/caring/manager_service/presentation/manager/service/GetManagerAccountForTestUseCase.java,5/1/51eb43264177e0a4cb62ac6aa7414a940e39872f
+ç
+]java/com/caring/manager_service/presentation/manager/vo/response/ResponseSpecificManager.java,7/4/74be7599a72263aaccd698d69285ff0c35e8902c
+ä
+Zjava/com/caring/manager_service/presentation/manager/service/GetManagerProfileUseCase.java,9/0/90df666eb5f8eaa49ef7366784cd33a98a83d212
+Ü
+Vjava/com/caring/manager_service/presentation/manager/vo/request/EditManagerInform.java,2/9/2938786784a5f06f510734a1c0d6c46df8052232
+ä
+Zjava/com/caring/manager_service/presentation/manager/service/EditManagerInformUseCase.java,b/e/be66b73219a88cbdb1ea64796874192d4b0b8ded

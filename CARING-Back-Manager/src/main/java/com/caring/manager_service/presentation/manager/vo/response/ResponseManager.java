@@ -11,6 +11,7 @@ public class ResponseManager {
 
     private final String managerUuid;
     private final String name;
+    private final String managerCode;
     private final String shelterUuid;
 
 }

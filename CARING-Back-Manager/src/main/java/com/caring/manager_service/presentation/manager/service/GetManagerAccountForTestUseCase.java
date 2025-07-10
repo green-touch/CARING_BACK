@@ -24,6 +24,7 @@ public class GetManagerAccountForTestUseCase {
                 .map(manager -> ResponseManagerAccount.builder()
                         .memberCode(manager.getMemberCode())
                         .name(manager.getName())
+                        .managerUuid(manager.getManagerUuid())
                         .build())
                 .collect(Collectors.toList());
     }

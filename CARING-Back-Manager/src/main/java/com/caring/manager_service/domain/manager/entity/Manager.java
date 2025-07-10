@@ -47,6 +47,8 @@ public class Manager extends BaseTimeEntity implements UserDetails {
     private String password;
     private String name;
     private String shelterUuid;
+    private String phoneNumber;
+    private String email;
 
     @Builder.Default
     @OneToMany(mappedBy = "manager", cascade = CascadeType.PERSIST)

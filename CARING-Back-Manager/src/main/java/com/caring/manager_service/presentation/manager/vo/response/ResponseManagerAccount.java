@@ -10,4 +10,5 @@ import lombok.RequiredArgsConstructor;
 public class ResponseManagerAccount {
     private final String memberCode;
     private final String name;
+    private final String managerUuid;
 }
