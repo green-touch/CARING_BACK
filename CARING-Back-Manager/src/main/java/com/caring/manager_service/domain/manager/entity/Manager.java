@@ -2,6 +2,7 @@ package com.caring.manager_service.domain.manager.entity;
 
 import com.caring.manager_service.domain.auditing.entity.BaseTimeEntity;
 import com.caring.manager_service.domain.authority.entity.PersonalSuperAuthority;
+import com.caring.manager_service.presentation.manager.vo.request.EditManagerInform;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,5 +78,10 @@ public class Manager extends BaseTimeEntity implements UserDetails {
 
     public void groupedInShelter(String shelterUuid) {
         this.shelterUuid = shelterUuid;
+    }
+
+    public void updateProfile(EditManagerInform editManagerInform) {
+        this.email = editManagerInform.getEmail();
+        this.phoneNumber = editManagerInform.getPhoneNumber();
     }
 }

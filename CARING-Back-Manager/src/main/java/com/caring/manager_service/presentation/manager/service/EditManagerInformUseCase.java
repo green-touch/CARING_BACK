@@ -20,7 +20,7 @@ public class EditManagerInformUseCase {
     public Long execute(String managerCode, EditManagerInform editManagerInform) {
 
         Manager manager = managerAdaptor.queryByMemberCode(managerCode);
-        managerDomainService.editProfile(editManagerInform);
+        managerDomainService.editProfile(manager, editManagerInform);
         return manager.getId();
     }
 }

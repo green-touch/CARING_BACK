@@ -6,6 +6,7 @@ import com.caring.manager_service.domain.manager.entity.Manager;
 import com.caring.manager_service.domain.manager.entity.ManagerGroup;
 import com.caring.manager_service.domain.manager.repository.ManagerGroupRepository;
 import com.caring.manager_service.domain.manager.repository.ManagerRepository;
+import com.caring.manager_service.presentation.manager.vo.request.EditManagerInform;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -47,5 +48,11 @@ public class ManagerDomainServiceImpl implements ManagerDomainService{
                 .userUuid(userUuid)
                 .build();
         return managerGroupRepository.save(newManagerGroup);
+    }
+
+    @Override
+    public Manager editProfile(Manager manager, EditManagerInform editManagerInform) {
+        manager.updateProfile(editManagerInform);
+        return manager;
     }
 }
