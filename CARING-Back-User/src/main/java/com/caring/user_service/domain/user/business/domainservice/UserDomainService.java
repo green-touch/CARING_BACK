@@ -6,6 +6,9 @@ public interface UserDomainService {
 
     User registerUser(String name, String password);
 
+    User registerUser(String name, String password, String birthDate, String phoneNumber,
+                      String roadAddress, String detailAddress);
+
     User registerUserWithShelterUuid(String name, String password, String shelterUuid);
 
     void resetPassword(User user, String encodedPassword);

@@ -35,7 +35,7 @@ public class UserAccessApiController {
 
     @Operation(summary = "새로운 유저를 등록합니다.")
     @PostMapping("/register")
-    public Long registerUser(@RequestBody RequestUser requestUser) {
+    public String registerUser(@RequestBody RequestUser requestUser) {
         return registerUserUseCase.execute(requestUser);
     }
 

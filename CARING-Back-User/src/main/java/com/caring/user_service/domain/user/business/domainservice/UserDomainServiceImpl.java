@@ -37,6 +37,26 @@ public class UserDomainServiceImpl implements UserDomainService {
     }
 
     @Override
+    public User registerUser(String name, String password, String birthDate, String phoneNumber,
+                             String roadAddress, String detailAddress) {
+        userValidator.validateName(name);
+        userValidator.validatePassword(password);
+
+        User newUser = User.builder()
+                .memberCode(generateRandomMemberCode(USER_MEMBER_CODE_PRESET))
+                .userUuid(UUID.randomUUID().toString())
+                .role(Role.USER)
+                .password(passwordEncoder.encode(password))
+                .name(name)
+                .phoneNumber(phoneNumber)
+                .roadAddress(roadAddress)
+                .detailAddress(detailAddress)
+                .birthDate(birthDate).build();
+
+        return userRepository.save(newUser);
+    }
+
+    @Override
     public User registerUserWithShelterUuid(String name, String password, String shelterUuid) {
         userValidator.validateName(name);
         userValidator.validatePassword(password);

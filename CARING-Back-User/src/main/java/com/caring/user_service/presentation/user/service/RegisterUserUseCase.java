@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegisterUserUseCase {
     private final UserDomainService userDomainService;
 
-    public Long execute(RequestUser requestUser) {
-        return userDomainService.registerUser(requestUser.getName(), requestUser.getPassword()).getId();
+    public String execute(RequestUser requestUser) {
+        return userDomainService.registerUser(requestUser.getName(), requestUser.getPassword(),
+                requestUser.getBirthdate(), requestUser.getPhoneNumber(),
+                requestUser.getRoadAddress(),requestUser.getDetailAddress()).getMemberCode();
     }
 }
