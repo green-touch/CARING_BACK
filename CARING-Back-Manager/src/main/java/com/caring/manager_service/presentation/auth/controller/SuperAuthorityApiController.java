@@ -5,6 +5,7 @@ import com.caring.manager_service.common.util.RoleUtil;
 import com.caring.manager_service.domain.authority.entity.SuperAuth;
 import com.caring.manager_service.presentation.auth.service.SwitchSuperAuthUseCase;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class SuperAuthorityApiController {
     @PatchMapping("/{managerUuid}")
     public ResponseEntity<String> switchSuperAuth(@PathVariable String managerUuid,
                          @RequestParam List<SuperAuth> superAuthList,
-                         @ManagerRoles List<String> roles) {
+                         @Parameter(hidden = true) @ManagerRoles List<String> roles) {
         RoleUtil.containManagerRole(SuperAuth.GRANT_SUPER_MANAGER_PERMISSION, roles);
         switchSuperAuthUseCase.execute(managerUuid, superAuthList);
         return ResponseEntity.ok(HttpStatus.OK.toString());
