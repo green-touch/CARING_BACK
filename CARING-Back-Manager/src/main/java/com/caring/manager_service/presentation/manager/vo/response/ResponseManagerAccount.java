@@ -7,8 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Builder
 @RequiredArgsConstructor
-public class ResponseSubmission {
-    private final String submissionUuid;
+public class ResponseManagerAccount {
+    private final String memberCode;
     private final String name;
-    private final String shelterUuid;
 }

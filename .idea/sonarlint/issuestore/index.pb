@@ -154,3 +154,15 @@ f
 Ujava/com/caring/manager_service/presentation/manager/service/ManagerLoginUseCase.java,c/3/c34e35f782bf60451ea5e99e2fd7029aa9ff9053
 p
 @java/com/caring/manager_service/common/util/EnumConvertUtil.java,a/d/ad78d50ebe251e7fd9c434f415a9ad0774d2a724
+…
+Ujava/com/caring/manager_service/presentation/manager/vo/response/ResponseManager.java,8/d/8d5acba25fa18c68832d538e2cbe1ec0908511b4
+‚
+Rjava/com/caring/manager_service/presentation/manager/vo/response/ResponseUser.java,f/f/ff2b9a6ca48b73d38db4934f67f799d216cf73de
+ˆ
+Xjava/com/caring/manager_service/presentation/manager/vo/response/ResponseSubmission.java,5/2/52a03d948ac0c9cfd03eadd7913416b282deff5c
+y
+Ijava/com/caring/manager_service/common/external/user/UserFeignClient.java,c/a/ca3427ceca38b3ea3bbf61e8f364ad9f4b7e9f66
+Œ
+\java/com/caring/manager_service/presentation/manager/vo/response/ResponseManagerAccount.java,a/3/a39cdf5bbeee6916b9726f1c401294fab939d768
+‘
+ajava/com/caring/manager_service/presentation/manager/service/GetManagerAccountForTestUseCase.java,5/1/51eb43264177e0a4cb62ac6aa7414a940e39872f

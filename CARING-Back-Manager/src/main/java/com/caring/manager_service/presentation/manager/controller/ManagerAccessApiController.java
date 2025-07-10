@@ -4,9 +4,11 @@ import com.caring.manager_service.common.annotation.ManagerRoles;
 import com.caring.manager_service.common.util.EnumConvertUtil;
 import com.caring.manager_service.common.util.RoleUtil;
 import com.caring.manager_service.domain.authority.entity.SuperAuth;
+import com.caring.manager_service.presentation.manager.service.GetManagerAccountForTestUseCase;
 import com.caring.manager_service.presentation.manager.service.RegisterDefaultManagerBySuperManagerUseCase;
 import com.caring.manager_service.presentation.manager.service.RegisterSuperManagerUseCase;
 import com.caring.manager_service.presentation.manager.vo.request.RequestManager;
+import com.caring.manager_service.presentation.manager.vo.response.ResponseManagerAccount;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import java.util.List;
 public class ManagerAccessApiController {
 
     private final RegisterSuperManagerUseCase registerSuperManagerUseCase;
+    private final GetManagerAccountForTestUseCase getManagerAccountForTestUseCase;
 
     @Operation(summary = "super 권한을 모두 가진 manager를 생성합니다. 테스트용입니다.")
     @PostMapping("/super")
@@ -32,5 +35,11 @@ public class ManagerAccessApiController {
     @GetMapping("/roles")
     public ResponseEntity<List<SuperAuth>> getAllSuperAuth() {
         return ResponseEntity.ok(EnumConvertUtil.getList(SuperAuth.class));
+    }
+
+    @Operation(summary = "manager의 memberCode, password를 확인합니다. 개발용입니다")
+    @GetMapping("/tests")
+    public ResponseEntity<List<ResponseManagerAccount>> getManagerAccountForTest() {
+        return ResponseEntity.ok(getManagerAccountForTestUseCase.execute());
     }
 }
