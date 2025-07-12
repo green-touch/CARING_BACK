@@ -5,6 +5,7 @@ import com.caring.user_service.domain.user.business.validator.UserValidator;
 import com.caring.user_service.domain.user.entity.Role;
 import com.caring.user_service.domain.user.entity.User;
 import com.caring.user_service.domain.user.repository.UserRepository;
+import com.caring.user_service.presentation.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -37,21 +38,20 @@ public class UserDomainServiceImpl implements UserDomainService {
     }
 
     @Override
-    public User registerUser(String name, String password, String birthDate, String phoneNumber,
-                             String roadAddress, String detailAddress) {
-        userValidator.validateName(name);
-        userValidator.validatePassword(password);
+    public User registerUser(UserDTO userDTO) {
+        userValidator.validateName(userDTO.getName());
+        userValidator.validatePassword(userDTO.getPassword());
 
         User newUser = User.builder()
                 .memberCode(generateRandomMemberCode(USER_MEMBER_CODE_PRESET))
                 .userUuid(UUID.randomUUID().toString())
                 .role(Role.USER)
-                .password(passwordEncoder.encode(password))
-                .name(name)
-                .phoneNumber(phoneNumber)
-                .roadAddress(roadAddress)
-                .detailAddress(detailAddress)
-                .birthDate(birthDate).build();
+                .password(passwordEncoder.encode(userDTO.getPassword()))
+                .name(userDTO.getName())
+                .phoneNumber(userDTO.getPhoneNumber())
+                .roadAddress(userDTO.getRoadAddress())
+                .detailAddress(userDTO.getDetailAddress())
+                .birthDate(userDTO.getBirthDate()).build();
 
         return userRepository.save(newUser);
     }

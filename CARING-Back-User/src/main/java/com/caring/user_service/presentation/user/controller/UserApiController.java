@@ -1,5 +1,6 @@
 package com.caring.user_service.presentation.user.controller;
 
+import com.caring.user_service.common.annotation.UserCode;
 import com.caring.user_service.presentation.user.service.AddEmergencyContactsUseCase;
 import com.caring.user_service.presentation.user.service.GetUserHomeInfoUseCase;
 import com.caring.user_service.presentation.user.service.GetUserProfileUseCase;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,7 +47,7 @@ public class UserApiController {
                     'member-code' 헤더는 프론트에서 명시적으로 포함시킬 필요가 없습니다.
                      포스트맨에서 테스트 가능합니다.""")
     @GetMapping("/my/info")
-    public ResponseUser getMyInfo(@RequestHeader("member-code") String memberCode) {
+    public ResponseUser getMyInfo(@UserCode String memberCode) {
         return getUserProfileUseCase.execute(memberCode);
     }
 
@@ -58,8 +58,8 @@ public class UserApiController {
                     Gateway에서 JWT를 파싱하여 자동으로 'member-code' 헤더를 추가하므로,
                     'member-code' 헤더는 프론트에서 명시적으로 포함시킬 필요가 없습니다.
                      포스트맨에서 테스트 가능합니다.""")
-    @GetMapping("home/info")
-    public ResponseUserHomeInfo getHomeInfo(@RequestHeader("member-code") String memberCode) {
+    @GetMapping("/home/info")
+    public ResponseUserHomeInfo getHomeInfo(@UserCode String memberCode) {
         return getUserHomeInfoUseCase.execute(memberCode);
     }
 
