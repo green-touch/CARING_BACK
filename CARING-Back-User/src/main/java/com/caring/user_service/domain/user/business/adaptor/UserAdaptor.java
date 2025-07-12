@@ -15,4 +15,6 @@ public interface UserAdaptor {
     User queryUserByUserUuid(String userUuid);
 
     List<User> queryByUserUuidList(List<String> userUuidList);
+
+    User queryUserByNameAndBirthDateAndPhoneNumber(String name, String birthDate, String phoneNumber);
 }

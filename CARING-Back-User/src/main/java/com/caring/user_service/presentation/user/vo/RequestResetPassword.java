@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ResponseUserShelterUuid {
-    private final String shelterUuid;
+public class RequestResetPassword {
+    private final String memberCode;
+    private final String newPassword;
 }

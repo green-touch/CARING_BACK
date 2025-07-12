@@ -49,4 +49,12 @@ public class UserAdaptorImpl implements UserAdaptor{
     public List<User> queryByUserUuidList(List<String> userUuidList) {
         return userRepository.findByUserUuidIn(userUuidList);
     }
+
+    @Override
+    public User queryUserByNameAndBirthDateAndPhoneNumber(String name, String birthDate, String phoneNumber) {
+        return userRepository.findByNameAndBirthDateAndPhoneNumber(name, birthDate, phoneNumber)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "User not found with name: " + name + " and birthDate: " + birthDate +
+                                " and phoneNumber: " + phoneNumber));
+    }
 }

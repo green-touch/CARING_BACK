@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -65,10 +64,14 @@ public class SecurityConfig {
                             .requestMatchers(permitAllRequest()).permitAll()
                             .requestMatchers(additionalSwaggerRequests()).permitAll()
                             .anyRequest().access((authentication, request) -> {
-                                String clientIp = request.getRequest().getRemoteAddr();
+                                String clientIp = request.getRequest().getRemoteHost();
                                 String gatewayIp = microServiceIpResolver.resolveGatewayIp();
-                                log.info("client ip is = {}", clientIp);
+                                log.info("client ip is = {} gateway ip is = {}", clientIp, gatewayIp);
                                 boolean isAllowed = clientIp.equals(gatewayIp);
+                                // TODO: 보안 설정에서 localhost(127.0.0.1) 허용은 개발 환경에만 적용해야함
+                                if(clientIp.equals("127.0.0.1")) {
+                                    isAllowed = true;
+                                }
 
                                 return new AuthorizationDecision(isAllowed);
                             });

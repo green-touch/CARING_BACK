@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ResponseUserUuid {
-    private Long userId;
-    private String userUuid;
+    private final Long userId;
+    private final String userUuid;
 }

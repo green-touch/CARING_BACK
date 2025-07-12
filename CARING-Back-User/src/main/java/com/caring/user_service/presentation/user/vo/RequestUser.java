@@ -10,4 +10,8 @@ import lombok.Getter;
 public class RequestUser {
     private final String name;
     private final String password;
+    private final String phoneNumber;
+    private final String birthdate;
+    private final String roadAddress;
+    private final String detailAddress;
 }
