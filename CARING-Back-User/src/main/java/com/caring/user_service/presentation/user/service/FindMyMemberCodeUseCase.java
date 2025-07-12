@@ -6,10 +6,10 @@ import com.caring.user_service.domain.user.entity.User;
 import com.caring.user_service.presentation.user.vo.RequestMemberCode;
 import com.caring.user_service.presentation.user.vo.ResponseMemberCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @UseCase
-@Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FindMyMemberCodeUseCase {
 
