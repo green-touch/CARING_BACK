@@ -14,5 +14,6 @@ public interface PersonalSuperAuthorityRepository extends JpaRepository<Personal
     List<PersonalSuperAuthority> findByManager(Manager manager);
 
     @Modifying // 이 어노테이션은 UPDATE/DELETE 쿼리에서 필수입니다.
-    @Query("DELETE FROM PersonalSuperAuthority psa WHERE psa.superAuthority.superAuth IN :superAuths")
-    void deleteBySuperAuthIn(@Param("superAuths") List<SuperAuth> superAuths);}
+    @Query("DELETE FROM PersonalSuperAuthority psa WHERE psa.superAuthority.superAuth IN :superAuths AND psa.manager = :manager")
+    void deleteBySuperAuthIn(Manager manager, @Param("superAuths") List<SuperAuth> superAuths);
+}

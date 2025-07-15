@@ -40,6 +40,6 @@ public class AuthorityDomainServiceImpl implements AuthorityDomainService{
 
     @Override
     public void removeAllInactiveSuperAuthority(Manager manager, List<SuperAuth> unactiveSuperAuthList) {
-        personalSuperAuthorityRepository.deleteBySuperAuthIn(unactiveSuperAuthList);
+        personalSuperAuthorityRepository.deleteBySuperAuthIn(manager, unactiveSuperAuthList);
     }
 }
