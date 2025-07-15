@@ -37,10 +37,10 @@ public class AuthorityDataInitializer {
                 .filter(superAuth -> !existingAuthorities.contains(superAuth))
                 .collect(Collectors.toList());
         if (!newAuthoritiesToAdd.isEmpty()) {
-            List<SuperAuthority> collect = newAuthoritiesToAdd.stream()
+            List<SuperAuthority> newSuperAuthorities = newAuthoritiesToAdd.stream()
                     .map(SuperAuthConverter::toSuperAuthority)
                     .collect(Collectors.toList());
-            superAuthorityRepository.saveAll(collect);
+            superAuthorityRepository.saveAll(newSuperAuthorities);
         }
     }
 }
