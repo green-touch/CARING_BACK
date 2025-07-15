@@ -42,16 +42,11 @@ jobs:
           cat changed_files.txt
 
           levels=()
-
           if echo "$changed_files" | grep -q "docker-compose-infra.yml"; then
-            levels+=("infra")
-          fi
-
-          if echo "$changed_files" | grep -qE "CARING-Back-(Gateway|Manager|User)|docker-compose-outer-app.yml"; then
-            levels+=("outer")
-          fi
-
-          if echo "$changed_files" | grep -qE "CARING-Back-(Config|Discovery)|docker-compose-inner-app.yml"; then
+            levels+=("infra" "outer" "inner")
+          elif echo "$changed_files" | grep -qE "CARING-Back-(Gateway|Manager|User)|docker-compose-outer-app.yml"; then
+            levels+=("outer" "inner")
+          elif echo "$changed_files" | grep -qE "CARING-Back-(Config|Discovery)|docker-compose-inner-app.yml"; then
             levels+=("inner")
           fi
 
@@ -66,7 +61,6 @@ jobs:
       - name: Build Changed JARs (Skip Tests)
         if: env.DEPLOY_LEVELS != ''
         run: |
-          mkdir -p packaged-jars
           for dir in $JAR_DIRS; do
             echo "🔎 Checking $dir ..."
             if grep -q "$dir" changed_files.txt; then
@@ -74,22 +68,22 @@ jobs:
               cd $dir
               chmod +x gradlew
               ./gradlew bootJar -x test
-              cp build/libs/*.jar ../packaged-jars/
               cd ..
             else
               echo "⏭ $dir not changed"
             fi
           done
 
-      - name: Upload JARs to EC2
+      - name: Upload JARs to EC2 in correct service paths
         if: env.DEPLOY_LEVELS != ''
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          source: "packaged-jars/*.jar"
-          target: "~/CARING_BACK/jars"
+          source: |
+            CARING-Back-*/build/libs/*.jar
+          target: "~/CARING_BACK"
           rm: false
 
       - name: SSH into EC2 and deploy Docker Compose
@@ -110,8 +104,14 @@ jobs:
             IFS=',' read -ra levels <<< "$DEPLOY_LEVELS"
             for level in "${levels[@]}"; do
               echo "🔁 Deploying level: $level"
-              docker-compose -f docker-compose-${level}-app.yml down
-              sleep 2
-              docker-compose -f docker-compose-${level}-app.yml up -d --build
+              if [ "$level" = "infra" ]; then
+                docker-compose -f docker-compose-infra.yml down
+                sleep 2
+                docker-compose -f docker-compose-infra.yml up -d --build
+              else
+                docker-compose -f docker-compose-${level}-app.yml down
+                sleep 2
+                docker-compose -f docker-compose-${level}-app.yml up -d --build
+              fi
               sleep 2
             done
