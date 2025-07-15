@@ -1,4 +1,4 @@
-package com.caring.manager_service.infra.user.vo;
+package com.caring.manager_service.infra.user.vo.request;
 
 import lombok.Builder;
 import lombok.Data;

@@ -38,7 +38,7 @@ public class InternalUserController {
         return getUserShelterUuidUseCase.execute(userUuid);
     }
 
-    @PostMapping("/byUuidList")
+    @GetMapping
     public List<ResponseUser> queryUserByUuidList(@RequestBody List<String> uuidList) {
         return getUsersByUuidListUseCase.execute(uuidList);
     }

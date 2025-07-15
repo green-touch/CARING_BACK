@@ -89,7 +89,7 @@ spring:
         - id: manager-service-api
           uri: lb://MANAGER-SERVICE
           predicates:
-            - Path=/manager-service/v1/api/managers/**, /manager-service/v1/api/submissions/**, /manager-service/v1/api/super-authorities/**
+            - Path=/manager-service/v1/api/managers/**, /manager-service/v1/api/submissions/**, /manager-service/v1/api/super-authorities/**, /manager-service/v1/api/users/**
             - Method=GET,POST,PUT,DELETE,PATCH
           filters:
             - RemoveRequestHeader=Cookie

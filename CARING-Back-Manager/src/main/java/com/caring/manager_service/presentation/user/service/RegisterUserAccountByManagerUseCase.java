@@ -1,12 +1,12 @@
 package com.caring.manager_service.presentation.user.service;
 
 import com.caring.manager_service.common.annotation.UseCase;
-import com.caring.manager_service.common.external.user.dto.ResponseUserUuid;
 import com.caring.manager_service.domain.manager.business.adaptor.ManagerAdaptor;
 import com.caring.manager_service.domain.manager.business.service.ManagerDomainService;
 import com.caring.manager_service.domain.manager.entity.Manager;
 import com.caring.manager_service.infra.user.client.UserServiceClient;
-import com.caring.manager_service.infra.user.vo.RequestUserWithShelterUuid;
+import com.caring.manager_service.infra.user.vo.request.RequestUserWithShelterUuid;
+import com.caring.manager_service.infra.user.vo.response.ResponseUserUuid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

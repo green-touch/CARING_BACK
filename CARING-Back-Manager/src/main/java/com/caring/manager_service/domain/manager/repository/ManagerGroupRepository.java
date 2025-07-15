@@ -11,4 +11,7 @@ import java.util.List;
 public interface ManagerGroupRepository extends JpaRepository<ManagerGroup, Long> {
     @Query("SELECT mg.userUuid FROM ManagerGroup mg WHERE mg.manager = :manager")
     List<String> findUsersByManager(@Param("manager") Manager manager);
+
+    @Query("SELECT mg.userUuid FROM ManagerGroup mg WHERE mg.manager.memberCode = :memberCode")
+    List<String> findUserUuidListByManagerMemberCode(String memberCode);
 }
