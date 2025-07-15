@@ -182,3 +182,5 @@ r
 Bjava/com/caring/manager_service/domain/shelter/entity/Shelter.java,f/6/f6c030b6043e03549490332b9ac1dcd051ad90d4
 v
 Fjava/com/caring/manager_service/domain/shelter/entity/ShelterUser.java,b/9/b912278e7db69d60b287bee28e51fc7fd78d4f60
+P
+ .github/pull_request_template.md,9/9/99d2d4406193bf0dc3e7b84a6c9b9109997a4864

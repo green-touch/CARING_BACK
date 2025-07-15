@@ -48,7 +48,7 @@ public class SwitchSuperAuthUseCase {
                 .collect(Collectors.toList());
 
         // must step remove -> save
-        authorityDomainService.removeAllUnActiveSuperAuthority(manager, blackList);
+        authorityDomainService.removeAllInactiveSuperAuthority(manager, blackList);
         authorityDomainService.saveAllActiveSuperAuthority(manager, whiteList);
 
     }

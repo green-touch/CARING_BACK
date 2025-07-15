@@ -10,5 +10,5 @@ public interface AuthorityDomainService {
 
     void saveAllActiveSuperAuthority(Manager manager, List<SuperAuthority> activeSuperAuthorityList);
 
-    void removeAllUnActiveSuperAuthority(Manager manager, List<SuperAuth> unactiveSuperAuthList);
+    void removeAllInactiveSuperAuthority(Manager manager, List<SuperAuth> unactiveSuperAuthList);
 }
