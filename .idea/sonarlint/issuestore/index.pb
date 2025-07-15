@@ -174,3 +174,11 @@ Zjava/com/caring/manager_service/presentation/manager/service/GetManagerProfileU
 Vjava/com/caring/manager_service/presentation/manager/vo/request/EditManagerInform.java,2/9/2938786784a5f06f510734a1c0d6c46df8052232
 ä
 Zjava/com/caring/manager_service/presentation/manager/service/EditManagerInformUseCase.java,b/e/be66b73219a88cbdb1ea64796874192d4b0b8ded
+w
+Gjava/com/caring/manager_service/common/controller/CommonController.java,5/7/57a9121435de822956b56c16c8a85a911dbde5c0
+Å
+Qjava/com/caring/manager_service/common/external/user/dto/RequestUserRegister.java,3/b/3b45e728b004955305092ce5cfd552c4ddc0b88c
+r
+Bjava/com/caring/manager_service/domain/shelter/entity/Shelter.java,f/6/f6c030b6043e03549490332b9ac1dcd051ad90d4
+v
+Fjava/com/caring/manager_service/domain/shelter/entity/ShelterUser.java,b/9/b912278e7db69d60b287bee28e51fc7fd78d4f60

@@ -47,7 +47,9 @@ public class SwitchSuperAuthUseCase {
                 .map(asa -> authorityAdaptor.queryBySuperAuth(asa))
                 .collect(Collectors.toList());
 
-        authorityDomainService.saveAllActiveSuperAuthority(manager, whiteList);
+        // must step remove -> save
         authorityDomainService.removeAllUnActiveSuperAuthority(manager, blackList);
+        authorityDomainService.saveAllActiveSuperAuthority(manager, whiteList);
+
     }
 }

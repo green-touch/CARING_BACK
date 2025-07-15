@@ -50,4 +50,10 @@ public class ManagerApiController {
     ) {
         return ResponseEntity.ok(editManagerInformUseCase.execute(managerCode, editManagerInform));
     }
+
+//    @Operation(summary = "노인 계정을 생성합니다.(아직 작동하지 않는 API입니다)")
+//    @PostMapping("/users")
+//    public ResponseEntity<Long> registerUserAccount() {
+//
+//    }
 }
