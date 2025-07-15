@@ -40,6 +40,8 @@ public class ManagerAuthorizationHeaderFilter extends AbstractGatewayFilterFacto
             if (memberInfo.getMemberCode() == null) {
                 return onError(exchange, "Invalid MANAGER JWT token", HttpStatus.UNAUTHORIZED);
             }
+            log.info("member-code = {}", memberInfo.getMemberCode());
+            log.info("roles = {}", memberInfo.getRoles());
 
             // 새로운 요청에 memberCode를 추가
             ServerHttpRequest mutatedRequest = request.mutate()

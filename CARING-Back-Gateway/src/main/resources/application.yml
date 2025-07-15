@@ -80,20 +80,20 @@ spring:
         - id: manager-service-access
           uri: lb://MANAGER-SERVICE
           predicates:
-            - Path=Path=/manager-service/v1/api/access/**
+            - Path=/manager-service/v1/api/access/**
             - Method=GET,POST,PUT,DELETE
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/manager-service/(?<segment>.*), /${segment}
 
-        - id: manager-service-auth
+        - id: manager-service-api
           uri: lb://MANAGER-SERVICE
           predicates:
-            - Path=/manager-service/v1/api/managers/**, /manager-service/v1/api/shelters/**
-            - Method=GET,POST,PUT,DELETE
+            - Path=/manager-service/v1/api/managers/**, /manager-service/v1/api/submissions/**, /manager-service/v1/api/super-authorities/**
+            - Method=GET,POST,PUT,DELETE,PATCH
           filters:
             - RemoveRequestHeader=Cookie
-            - RewritePath=/user-service/(?<segment>.*), /${segment}
+            - RewritePath=/manager-service/(?<segment>.*), /${segment}
             - ManagerAuthorizationHeaderFilter
 
         - id: manager-service-actuator

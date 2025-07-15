@@ -1,15 +1,12 @@
 package com.caring.manager_service.domain.manager.business.service;
 
 import com.caring.manager_service.common.annotation.DomainService;
-import com.caring.manager_service.domain.authority.entity.Authority;
-import com.caring.manager_service.domain.authority.entity.ManagerAuthority;
 import com.caring.manager_service.domain.manager.business.validator.ManagerValidator;
 import com.caring.manager_service.domain.manager.entity.Manager;
 import com.caring.manager_service.domain.manager.entity.ManagerGroup;
-import com.caring.manager_service.domain.manager.entity.Submission;
 import com.caring.manager_service.domain.manager.repository.ManagerGroupRepository;
 import com.caring.manager_service.domain.manager.repository.ManagerRepository;
-import com.caring.manager_service.domain.manager.repository.SubmissionRepository;
+import com.caring.manager_service.presentation.manager.vo.request.EditManagerInform;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -17,20 +14,18 @@ import java.util.UUID;
 
 import static com.caring.manager_service.common.consts.StaticVariable.MANAGER_MEMBER_CODE_PRESET;
 import static com.caring.manager_service.common.util.RandomNumberUtil.generateRandomMemberCode;
-import static com.caring.manager_service.domain.manager.entity.SubmissionStatus.APPLY;
 
 @DomainService
 @RequiredArgsConstructor
 public class ManagerDomainServiceImpl implements ManagerDomainService{
 
     private final ManagerRepository managerRepository;
-    private final SubmissionRepository submissionRepository;
     private final PasswordEncoder passwordEncoder;
     private final ManagerGroupRepository managerGroupRepository;
     private final ManagerValidator managerValidator;
 
     @Override
-    public Manager registerManager(String name, String password, Authority authority) {
+    public Manager registerManager(String name, String password) {
 
         managerValidator.checkName(name);
         managerValidator.checkPassword(password);
@@ -41,31 +36,9 @@ public class ManagerDomainServiceImpl implements ManagerDomainService{
                 .name(name)
                 .password(passwordEncoder.encode(password))
                 .build();
-        ManagerAuthority.builder()
-                .manager(newManager)
-                .authority(authority)
-                .build()
-                .link(newManager);
+
 
         return managerRepository.save(newManager);
-    }
-
-    @Override
-    public Submission applyManager(String name, String password, String shelterUuid) {
-        Submission application = Submission.builder()
-                .submissionUuid(UUID.randomUUID().toString())
-                .name(name)
-                .password(password)
-                .shelterUuid(shelterUuid)
-                .status(APPLY)
-                .build();
-
-        return submissionRepository.save(application);
-    }
-
-    @Override
-    public void removeSubmission(String submissionUuid) {
-        submissionRepository.deleteBySubmissionUuid(submissionUuid);
     }
 
     @Override
@@ -75,5 +48,11 @@ public class ManagerDomainServiceImpl implements ManagerDomainService{
                 .userUuid(userUuid)
                 .build();
         return managerGroupRepository.save(newManagerGroup);
+    }
+
+    @Override
+    public Manager editProfile(Manager manager, EditManagerInform editManagerInform) {
+        manager.updateProfile(editManagerInform);
+        return manager;
     }
 }

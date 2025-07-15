@@ -2,11 +2,8 @@ package com.caring.manager_service.domain.manager.business.adaptor;
 
 import com.caring.manager_service.common.annotation.Adaptor;
 import com.caring.manager_service.domain.manager.entity.Manager;
-import com.caring.manager_service.domain.manager.entity.Submission;
-import com.caring.manager_service.domain.manager.entity.SubmissionStatus;
 import com.caring.manager_service.domain.manager.repository.ManagerGroupRepository;
 import com.caring.manager_service.domain.manager.repository.ManagerRepository;
-import com.caring.manager_service.domain.manager.repository.SubmissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,7 +15,6 @@ import java.util.List;
 public class ManagerAdaptorImpl implements ManagerAdaptor {
 
     private final ManagerRepository managerRepository;
-    private final SubmissionRepository submissionRepository;
     private final ManagerGroupRepository managerGroupRepository;
 
     @Override
@@ -39,19 +35,6 @@ public class ManagerAdaptorImpl implements ManagerAdaptor {
     public List<Manager> queryByShelter(String shelterUuid) {
         return managerRepository.findByShelterUuid(shelterUuid);
     }
-
-    @Override
-    public Submission querySubmissionByUuid(String submissionUuid) {
-        return submissionRepository.findBySubmissionUuid(submissionUuid)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND, "Submission not found with UUID: " + submissionUuid));
-    }
-
-    @Override
-    public List<Submission> querySubmissionsByStatus(SubmissionStatus status) {
-        return submissionRepository.findByStatus(status);
-    }
-
     @Override
     public List<Manager> queryAll() {
         return managerRepository.findAll();
