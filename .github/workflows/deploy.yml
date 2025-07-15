@@ -42,15 +42,17 @@ jobs:
           cat changed_files.txt
 
           levels=()
+
           if echo "$changed_files" | grep -q "docker-compose-infra.yml"; then
             levels+=("infra" "outer" "inner")
-          elif echo "$changed_files" | grep -qE "CARING-Back-(Gateway|Manager|User)|docker-compose-outer-app.yml"; then
+          elif echo "$changed_files" | grep -qE "CARING-Back-(Config|Discovery)|docker-compose-outer-app.yml"; then
             levels+=("outer" "inner")
-          elif echo "$changed_files" | grep -qE "CARING-Back-(Config|Discovery)|docker-compose-inner-app.yml"; then
+          elif echo "$changed_files" | grep -qE "CARING-Back-(Gateway|Manager|User)|docker-compose-inner-app.yml"; then
             levels+=("inner")
           fi
 
-          DEPLOY_LEVELS=$(IFS=,; echo "${levels[*]}")
+          # 중복 제거 및 출력
+          DEPLOY_LEVELS=$(printf "%s\n" "${levels[@]}" | awk '!x[$0]++' | paste -sd "," -)
           echo "DEPLOY_LEVELS=$DEPLOY_LEVELS" >> $GITHUB_ENV
           echo "✔ Detected deploy levels: $DEPLOY_LEVELS"
 
@@ -94,6 +96,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
+            set -e
             cd ~/CARING_BACK
 
             if [ ! -f .env ]; then
@@ -102,16 +105,31 @@ jobs:
             fi
 
             IFS=',' read -ra levels <<< "$DEPLOY_LEVELS"
-            for level in "${levels[@]}"; do
-              echo "🔁 Deploying level: $level"
-              if [ "$level" = "infra" ]; then
-                docker-compose -f docker-compose-infra.yml down
-                sleep 2
-                docker-compose -f docker-compose-infra.yml up -d --build
-              else
-                docker-compose -f docker-compose-${level}-app.yml down
-                sleep 2
-                docker-compose -f docker-compose-${level}-app.yml up -d --build
-              fi
-              sleep 2
+
+            echo "🧹 Stopping containers"
+            for level in inner outer infra; do
+              for deploy_level in "${levels[@]}"; do
+                if [ "$deploy_level" = "$level" ]; then
+                  if [ "$level" = "infra" ]; then
+                    docker-compose -f docker-compose-infra.yml down || true
+                  else
+                    docker-compose -f docker-compose-${level}-app.yml down || true
+                  fi
+                  sleep 3
+                fi
+              done
+            done
+
+            echo "🚀 Starting containers"
+            for level in infra outer inner; do
+              for deploy_level in "${levels[@]}"; do
+                if [ "$deploy_level" = "$level" ]; then
+                  if [ "$level" = "infra" ]; then
+                    docker-compose -f docker-compose-infra.yml up -d --build
+                  else
+                    docker-compose -f docker-compose-${level}-app.yml up -d --build
+                  fi
+                  sleep 15  # 대기 15초
+                fi
+              done
             done
