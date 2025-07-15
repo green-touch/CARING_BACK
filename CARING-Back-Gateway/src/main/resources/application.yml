@@ -24,7 +24,7 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /${segment}
 
-        - id: user-service-manager
+        - id: user-service-auth
           uri: lb://USER-SERVICE
           predicates:
             - Path=/user-service/v1/api/users/**, /user-service/v1/api/managers/**, /user-service/v1/api/shelters/**
@@ -32,7 +32,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /${segment}
-            - ManagerAuthorizationHeaderFilter
+            - UserAuthorizationHeaderFilter
 
         ### <ACTUATOR> ###
         - id: user-service-actuator
@@ -95,7 +95,6 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/manager-service/(?<segment>.*), /${segment}
             - ManagerAuthorizationHeaderFilter
-
 
         - id: manager-service-actuator
           uri: lb://MANAGER-SERVICE

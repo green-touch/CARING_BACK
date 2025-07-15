@@ -7,6 +7,8 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ResponseUserShelterUuid {
-    private final String shelterUuid;
+public class ResponseEmergencyContact {
+    private final String contactName;
+    private final String contactRelationship;
+    private final String contactPhoneNumber;
 }

@@ -14,10 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class GetUserProfileUseCase {
 
     private final UserAdaptor userAdaptor;
+    private final UserMapper userMapper;
 
-    public ResponseUser execute(String userUuid) {
-        User user = userAdaptor.queryUserByUserUuid(userUuid);
-        return UserMapper.INSTANCE.toResponseUserVo(user);
+    public ResponseUser execute(String memberCode) {
+        User user = userAdaptor.queryUserByMemberCode(memberCode);
+        return userMapper.toResponseUserVo(user);
     }
 
 }

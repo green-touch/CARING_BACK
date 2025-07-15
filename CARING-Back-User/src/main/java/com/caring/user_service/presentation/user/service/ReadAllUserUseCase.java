@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReadAllUserUseCase {
     private final UserAdaptor userAdaptor;
+    private final UserMapper userMapper;
 
     public List<ResponseUser> execute() {
         List<User> users = userAdaptor.queryAll();
         return users.stream()
-                .map(user -> UserMapper.INSTANCE.toResponseUserVo(user))
+                .map(userMapper::toResponseUserVo)
                 .collect(Collectors.toList());
     }
 }
