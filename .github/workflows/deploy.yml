@@ -75,7 +75,7 @@ jobs:
             fi
           done
 
-      - name: Upload JARs to EC2 in correct service paths
+      - name: Upload JARs to EC2
         if: env.DEPLOY_LEVELS != ''
         uses: appleboy/scp-action@master
         with:
@@ -94,18 +94,17 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
+          envs: DEPLOY_LEVELS
           script: |
             set -e
             cd ~/CARING_BACK
-
-            export DEPLOY_LEVELS="${{ env.DEPLOY_LEVELS }}"
-            echo "📌 DEPLOY_LEVELS=$DEPLOY_LEVELS"
 
             if [ ! -f .env ]; then
               echo "❌ .env 파일이 존재하지 않아 배포 중단"
               exit 1
             fi
 
+            echo "📌 DEPLOY_LEVELS=$DEPLOY_LEVELS"
             mapfile -t levels < <(echo "$DEPLOY_LEVELS" | tr ',' '\n')
             echo "📌 Parsed levels: ${levels[@]}"
 
@@ -115,9 +114,9 @@ jobs:
                 if [ "$deploy_level" = "$level" ]; then
                   echo "⛔ Stopping $level"
                   if [ "$level" = "infra" ]; then
-                    docker-compose -f docker-compose-infra.yml down --remove-orphans || true
+                    docker-compose -f docker-compose-infra.yml down || true
                   else
-                    docker-compose -f docker-compose-${level}-app.yml down --remove-orphans || true
+                    docker-compose -f docker-compose-${level}-app.yml down || true
                   fi
                   echo "⏳ Waiting after stopping $level..."
                   sleep 5
@@ -133,11 +132,8 @@ jobs:
                   if [ "$level" = "infra" ]; then
                     docker-compose -f docker-compose-infra.yml up -d --build
                     sleep 30
-                  elif [ "$level" = "outer" ]; then
-                    docker-compose -f docker-compose-outer-app.yml up -d --build
-                    sleep 20
                   else
-                    docker-compose -f docker-compose-inner-app.yml up -d --build
+                    docker-compose -f docker-compose-${level}-app.yml up -d --build
                     sleep 15
                   fi
                 fi
