@@ -1,7 +1,12 @@
 package com.caring.manager_service.presentation.user.controller;
 
 
+import com.caring.manager_service.common.annotation.ManagerCode;
+import com.caring.manager_service.common.external.user.dto.ResponseUserUuid;
+import com.caring.manager_service.infra.user.vo.RequestUserWithShelterUuid;
+import com.caring.manager_service.presentation.user.service.RegisterUserAccountByManagerUseCase;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +21,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserApiController {
 
+    private final RegisterUserAccountByManagerUseCase registerUserAccountByManagerUseCase;
+
     @Operation(summary = "노인 계정을 생성합니다")
-    @PostMapping()
-    public Long registerUserAccountByManager() {
-        return null;
+    @PostMapping("/shelters/{shelterId}")
+    public ResponseUserUuid registerUserAccountByManager(
+            @Parameter(hidden = true) @ManagerCode String managerCode,
+            @PathVariable Long shelterId,
+            @RequestBody RequestUserWithShelterUuid requestUserWithShelterUuid
+    ) {
+        return registerUserAccountByManagerUseCase.execute(managerCode, shelterId, requestUserWithShelterUuid);
     }
 
     @Operation(summary = "모든 노인 계정을 조회합니다. 이때 super 권한이 필요합니다.")
