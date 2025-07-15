@@ -1,7 +1,8 @@
 package com.caring.manager_service.domain.manager.entity;
 
 import com.caring.manager_service.domain.auditing.entity.BaseTimeEntity;
-import com.caring.manager_service.domain.authority.entity.ManagerAuthority;
+import com.caring.manager_service.domain.authority.entity.PersonalSuperAuthority;
+import com.caring.manager_service.presentation.manager.vo.request.EditManagerInform;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,16 +48,20 @@ public class Manager extends BaseTimeEntity implements UserDetails {
     private String password;
     private String name;
     private String shelterUuid;
+    private String phoneNumber;
+    private String email;
 
     @Builder.Default
     @OneToMany(mappedBy = "manager", cascade = CascadeType.PERSIST)
-    private List<ManagerAuthority> managerAuthorityList = new ArrayList<>();
+    private List<PersonalSuperAuthority> personalSuperAuthorityList = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return managerAuthorityList.stream()
-                .map(managerAuthority ->
-                        new SimpleGrantedAuthority(managerAuthority.getAuthority().getManagerRole().getKey())
+        return personalSuperAuthorityList.stream()
+                .map(personalSuperAuthority ->
+                        new SimpleGrantedAuthority(
+                                personalSuperAuthority.getSuperAuthority().getSuperAuth().getKey()
+                        )
                 )
                 .collect(Collectors.toList());
     }
@@ -73,5 +78,10 @@ public class Manager extends BaseTimeEntity implements UserDetails {
 
     public void groupedInShelter(String shelterUuid) {
         this.shelterUuid = shelterUuid;
+    }
+
+    public void updateProfile(EditManagerInform editManagerInform) {
+        this.email = editManagerInform.getEmail();
+        this.phoneNumber = editManagerInform.getPhoneNumber();
     }
 }

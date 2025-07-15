@@ -1,43 +1,45 @@
 package com.caring.manager_service.presentation.manager.controller;
 
-import com.caring.manager_service.presentation.manager.service.ApplyManagerUseCase;
-import com.caring.manager_service.presentation.manager.service.RegisterManagerUseCase;
+import com.caring.manager_service.common.annotation.ManagerRoles;
+import com.caring.manager_service.common.util.EnumConvertUtil;
+import com.caring.manager_service.common.util.RoleUtil;
+import com.caring.manager_service.domain.authority.entity.SuperAuth;
+import com.caring.manager_service.presentation.manager.service.GetManagerAccountForTestUseCase;
+import com.caring.manager_service.presentation.manager.service.RegisterDefaultManagerBySuperManagerUseCase;
 import com.caring.manager_service.presentation.manager.service.RegisterSuperManagerUseCase;
 import com.caring.manager_service.presentation.manager.vo.request.RequestManager;
+import com.caring.manager_service.presentation.manager.vo.response.ResponseManagerAccount;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-@Tag(name = "[매니저(액세스 허용)]")
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/v1/api/access/managers")
+@RequiredArgsConstructor
 public class ManagerAccessApiController {
 
     private final RegisterSuperManagerUseCase registerSuperManagerUseCase;
-    private final ApplyManagerUseCase applyManagerUseCase;
-    private final RegisterManagerUseCase registerManagerUseCase;
+    private final GetManagerAccountForTestUseCase getManagerAccountForTestUseCase;
 
-    @Operation(summary = "기본 권한 매니저를 서버에 등록합니다. Manager의 기본 Role인 Manage로 기본 설정됩니다. 보호소 등록은 별도로 이뤄져야 합니다.")
-    @PostMapping("/register")
-    public Long registerManager(@RequestBody RequestManager requestManager) {
-        return registerManagerUseCase.execute(requestManager);
-    }
-
-    @Operation(summary = "SUPER 권한을 가진 매니저를 서버에 등록합니다.")
+    @Operation(summary = "super 권한을 모두 가진 manager를 생성합니다. 테스트용입니다.")
     @PostMapping("/super")
-    public Long registerSuperManager(@RequestBody RequestManager requestManager) {
-        return registerSuperManagerUseCase.execute(requestManager);
+    public ResponseEntity<Long> registerSuperManager(@RequestBody RequestManager requestManager) {
+        return ResponseEntity.ok(registerSuperManagerUseCase.execute(requestManager));
     }
 
-    @Operation(summary = "특정 보호소의 매니저를 신청합니다.")
-    @PostMapping("/submissions/shelters/{shelterUuid}")
-    public Long applyManager(@PathVariable String shelterUuid,
-                             @RequestBody RequestManager requestManager) {
-        return applyManagerUseCase.execute(requestManager, shelterUuid);
+    @Operation(summary = "super 권한 enum을 조회합니다.")
+    @GetMapping("/roles")
+    public ResponseEntity<List<SuperAuth>> getAllSuperAuth() {
+        return ResponseEntity.ok(EnumConvertUtil.getList(SuperAuth.class));
+    }
+
+    @Operation(summary = "manager의 memberCode, password를 확인합니다. 개발용입니다")
+    @GetMapping("/tests")
+    public ResponseEntity<List<ResponseManagerAccount>> getManagerAccountForTest() {
+        return ResponseEntity.ok(getManagerAccountForTestUseCase.execute());
     }
 }

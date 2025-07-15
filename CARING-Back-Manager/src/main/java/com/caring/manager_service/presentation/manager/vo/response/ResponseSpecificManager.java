@@ -14,11 +14,16 @@ import lombok.RequiredArgsConstructor;
 public class ResponseSpecificManager {
     private final ResponseManager responseManager;
     private final ResponseAuthority responseAuthority;
+    private final String email;
+    private final String phoneNumber;
+
 
     public static ResponseSpecificManager of(Manager manager) {
         return ResponseSpecificManager.builder()
                 .responseManager(ManagerMapper.INSTANCE.toResponseManager(manager))
                 .responseAuthority(ResponseAuthority.of(manager))
+                .email(manager.getEmail())
+                .phoneNumber(manager.getPhoneNumber())
                 .build();
     }
 }
