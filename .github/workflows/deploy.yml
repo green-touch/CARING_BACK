@@ -51,7 +51,6 @@ jobs:
             levels+=("inner")
           fi
 
-          # 중복 제거 및 출력
           DEPLOY_LEVELS=$(printf "%s\n" "${levels[@]}" | awk '!x[$0]++' | paste -sd "," -)
           echo "DEPLOY_LEVELS=$DEPLOY_LEVELS" >> $GITHUB_ENV
           echo "✔ Detected deploy levels: $DEPLOY_LEVELS"
@@ -110,12 +109,13 @@ jobs:
             for level in inner outer infra; do
               for deploy_level in "${levels[@]}"; do
                 if [ "$deploy_level" = "$level" ]; then
+                  echo "⛔ Stopping $level"
                   if [ "$level" = "infra" ]; then
-                    docker-compose -f docker-compose-infra.yml down || true
+                    docker-compose -f docker-compose-infra.yml down --remove-orphans || true
                   else
-                    docker-compose -f docker-compose-${level}-app.yml down || true
+                    docker-compose -f docker-compose-${level}-app.yml down --remove-orphans || true
                   fi
-                  sleep 3
+                  sleep 5
                 fi
               done
             done
@@ -124,12 +124,17 @@ jobs:
             for level in infra outer inner; do
               for deploy_level in "${levels[@]}"; do
                 if [ "$deploy_level" = "$level" ]; then
+                  echo "🔼 Starting $level"
                   if [ "$level" = "infra" ]; then
                     docker-compose -f docker-compose-infra.yml up -d --build
+                    sleep 30
+                  elif [ "$level" = "outer" ]; then
+                    docker-compose -f docker-compose-outer-app.yml up -d --build
+                    sleep 20
                   else
-                    docker-compose -f docker-compose-${level}-app.yml up -d --build
+                    docker-compose -f docker-compose-inner-app.yml up -d --build
+                    sleep 15
                   fi
-                  sleep 15  # 대기 15초
                 fi
               done
             done
