@@ -103,7 +103,9 @@ jobs:
               exit 1
             fi
 
-            IFS=',' read -ra levels <<< "$DEPLOY_LEVELS"
+            echo "📌 DEPLOY_LEVELS=$DEPLOY_LEVELS"
+            mapfile -t levels < <(echo "$DEPLOY_LEVELS" | tr ',' '\n')
+            echo "📌 Parsed levels: ${levels[@]}"
 
             echo "🧹 Stopping containers"
             for level in inner outer infra; do
@@ -115,6 +117,7 @@ jobs:
                   else
                     docker-compose -f docker-compose-${level}-app.yml down --remove-orphans || true
                   fi
+                  echo "⏳ Waiting after stopping $level..."
                   sleep 5
                 fi
               done
@@ -127,12 +130,15 @@ jobs:
                   echo "🔼 Starting $level"
                   if [ "$level" = "infra" ]; then
                     docker-compose -f docker-compose-infra.yml up -d --build
+                    echo "⏳ Waiting 30s for $level"
                     sleep 30
                   elif [ "$level" = "outer" ]; then
                     docker-compose -f docker-compose-outer-app.yml up -d --build
+                    echo "⏳ Waiting 20s for $level"
                     sleep 20
                   else
                     docker-compose -f docker-compose-inner-app.yml up -d --build
+                    echo "⏳ Waiting 15s for $level"
                     sleep 15
                   fi
                 fi
