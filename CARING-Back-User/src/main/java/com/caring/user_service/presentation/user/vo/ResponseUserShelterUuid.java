@@ -8,5 +8,5 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class ResponseUserShelterUuid {
-    private String shelterUuid;
+    private final String shelterUuid;
 }

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,10 @@ public class SecurityAccessApiController {
     private final ManagerTokenService managerTokenService;
 
     @Operation(summary = "매니저가 로그인을 합니다.")
-    @PostMapping("/managers")
-    public JwtToken loginManager(@RequestBody RequestLogin requestLogin) {
-        return managerTokenService.login(requestLogin.getMemberCode(), requestLogin.getPassword());
+    @PostMapping("/managers/login")
+    public ResponseEntity<JwtToken> loginManager(@RequestBody RequestLogin requestLogin) {
+        return ResponseEntity
+                .ok(managerTokenService.login(requestLogin.getMemberCode(), requestLogin.getPassword()));
     }
-    
 
 }

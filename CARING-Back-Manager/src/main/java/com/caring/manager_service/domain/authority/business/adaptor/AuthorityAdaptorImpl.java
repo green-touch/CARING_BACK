@@ -1,29 +1,39 @@
 package com.caring.manager_service.domain.authority.business.adaptor;
 
 import com.caring.manager_service.common.annotation.Adaptor;
-import com.caring.manager_service.domain.authority.entity.Authority;
-import com.caring.manager_service.domain.authority.entity.ManagerRole;
-import com.caring.manager_service.domain.authority.repository.AuthorityRepository;
+import com.caring.manager_service.domain.authority.entity.PersonalSuperAuthority;
+import com.caring.manager_service.domain.authority.entity.SuperAuth;
+import com.caring.manager_service.domain.authority.entity.SuperAuthority;
+import com.caring.manager_service.domain.authority.repository.PersonalSuperAuthorityRepository;
+import com.caring.manager_service.domain.authority.repository.SuperAuthorityRepository;
+import com.caring.manager_service.domain.manager.entity.Manager;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Adaptor
 @RequiredArgsConstructor
 public class AuthorityAdaptorImpl implements AuthorityAdaptor{
 
-    private final AuthorityRepository authorityRepository;
+    private final SuperAuthorityRepository superAuthorityRepository;
+    private final PersonalSuperAuthorityRepository personalSuperAuthorityRepository;
 
     @Override
-    public Authority queryByManagerRole(ManagerRole managerRole) {
-        return authorityRepository.findByManagerRole(managerRole)
-                .orElseThrow(() -> new RuntimeException("not found ManagerRole"));
+    public Set<PersonalSuperAuthority> queryCurrentPersonalSuperAuthority(Manager manager) {
+        return personalSuperAuthorityRepository.findByManager(manager)
+                .stream().collect(Collectors.toSet());
     }
 
     @Override
-    public List<Authority> queryAll() {
-        return authorityRepository.findAll();
+    public SuperAuthority queryBySuperAuth(SuperAuth superAuth) {
+        return superAuthorityRepository.findBySuperAuth(superAuth)
+                .orElseThrow(() -> new RuntimeException("not found super authority"));
+    }
+
+    @Override
+    public List<SuperAuthority> queryAllSuperAuthority() {
+        return superAuthorityRepository.findAll();
     }
 }

@@ -5,6 +5,7 @@ import com.caring.user_service.domain.user.business.validator.UserValidator;
 import com.caring.user_service.domain.user.entity.Role;
 import com.caring.user_service.domain.user.entity.User;
 import com.caring.user_service.domain.user.repository.UserRepository;
+import com.caring.user_service.presentation.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -37,6 +38,25 @@ public class UserDomainServiceImpl implements UserDomainService {
     }
 
     @Override
+    public User registerUser(UserDTO userDTO) {
+        userValidator.validateName(userDTO.getName());
+        userValidator.validatePassword(userDTO.getPassword());
+
+        User newUser = User.builder()
+                .memberCode(generateRandomMemberCode(USER_MEMBER_CODE_PRESET))
+                .userUuid(UUID.randomUUID().toString())
+                .role(Role.USER)
+                .password(passwordEncoder.encode(userDTO.getPassword()))
+                .name(userDTO.getName())
+                .phoneNumber(userDTO.getPhoneNumber())
+                .roadAddress(userDTO.getRoadAddress())
+                .detailAddress(userDTO.getDetailAddress())
+                .birthDate(userDTO.getBirthDate()).build();
+
+        return userRepository.save(newUser);
+    }
+
+    @Override
     public User registerUserWithShelterUuid(String name, String password, String shelterUuid) {
         userValidator.validateName(name);
         userValidator.validatePassword(password);
@@ -50,5 +70,13 @@ public class UserDomainServiceImpl implements UserDomainService {
                 .shelterUuid(shelterUuid)
                 .build();
         return userRepository.save(newUser);
+    }
+
+    @Override
+    public void resetPassword(User user, String encodedPassword) {
+        if (user.isSamePassword(encodedPassword)) {
+            throw new IllegalArgumentException("이전에 사용한 비밀번호와 동일합니다.");
+        }
+        user.changePassword(encodedPassword);
     }
 }

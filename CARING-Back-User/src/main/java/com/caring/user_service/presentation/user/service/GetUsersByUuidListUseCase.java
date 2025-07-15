@@ -16,12 +16,13 @@ import java.util.List;
 public class GetUsersByUuidListUseCase {
 
     private final UserAdaptor userAdaptor;
+    private final UserMapper userMapper;
 
     public List<ResponseUser> execute(List<String> uuidList) {
         List<User> users = userAdaptor.queryByUserUuidList(uuidList);
 
         return users.stream()
-                .map(UserMapper.INSTANCE::toResponseUserVo)
+                .map(userMapper::toResponseUserVo)
                 .toList();
     }
 }
