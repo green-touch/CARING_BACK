@@ -1,4 +1,4 @@
-name: CI/CD to EC2 (only main branch)
+name: CI/CD to EC2 (multi-level deploy only main)
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # full git history needed for git diff
+          fetch-depth: 0
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -38,52 +38,65 @@ jobs:
         run: |
           echo "📦 Detecting changed files..."
           changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} || true)
-          echo "$changed_files"
+          echo "$changed_files" > changed_files.txt
+          cat changed_files.txt
 
-          level="none"
+          levels=()
+
           if echo "$changed_files" | grep -q "docker-compose-infra.yml"; then
-            level="infra"
-          elif echo "$changed_files" | grep -qE "CARING-Back-(Gateway|Manager|User)|docker-compose-outer-app.yml"; then
-            level="outer"
-          elif echo "$changed_files" | grep -qE "CARING-Back-(Config|Discovery)|docker-compose-inner-app.yml"; then
-            level="inner"
+            levels+=("infra" "outer" "inner")
+          elif echo "$changed_files" | grep -qE "CARING-Back-(Config|Discovery)|docker-compose-outer-app.yml"; then
+            levels+=("outer" "inner")
+          elif echo "$changed_files" | grep -qE "CARING-Back-(Gateway|Manager|User)|docker-compose-inner-app.yml"; then
+            levels+=("inner")
           fi
 
-          echo "DEPLOY_LEVEL=$level" >> $GITHUB_ENV
-          echo "✔ Detected deploy level: $level"
+          DEPLOY_LEVELS=$(printf "%s\n" "${levels[@]}" | awk '!x[$0]++' | paste -sd "," -)
+          echo "DEPLOY_LEVELS=$DEPLOY_LEVELS" >> $GITHUB_ENV
+          echo "✔ Detected deploy levels: $DEPLOY_LEVELS"
+
+      - name: Show changed files
+        if: env.DEPLOY_LEVELS != ''
+        run: cat changed_files.txt
 
       - name: Build Changed JARs (Skip Tests)
-        if: env.DEPLOY_LEVEL != 'none'
+        if: env.DEPLOY_LEVELS != ''
         run: |
           for dir in $JAR_DIRS; do
-            if echo "$changed_files" | grep -q "$dir"; then
+            echo "🔎 Checking $dir ..."
+            if grep -q "$dir" changed_files.txt; then
               echo "📦 Building $dir"
               cd $dir
-              chmod +x gradlew  # ✅ 실행 권한 추가
+              chmod +x gradlew
               ./gradlew bootJar -x test
               cd ..
+            else
+              echo "⏭ $dir not changed"
             fi
           done
 
-      - name: Upload files to EC2
-        if: env.DEPLOY_LEVEL != 'none'
+      - name: Upload JARs to EC2
+        if: env.DEPLOY_LEVELS != ''
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          source: "."
+          source: |
+            CARING-Back-*/build/libs/*.jar
           target: "~/CARING_BACK"
           rm: false
 
       - name: SSH into EC2 and deploy Docker Compose
-        if: env.DEPLOY_LEVEL != 'none'
+        if: env.DEPLOY_LEVELS != ''
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
+          envs: DEPLOY_LEVELS
           script: |
+            set -e
             cd ~/CARING_BACK
 
             if [ ! -f .env ]; then
@@ -91,39 +104,38 @@ jobs:
               exit 1
             fi
 
-            if [ "$DEPLOY_LEVEL" = "infra" ]; then
-              echo "🧱 Deploying infra..."
-              docker-compose -f docker-compose-infra.yml down
-              sleep 2
-              docker-compose -f docker-compose-infra.yml up -d --build
-              sleep 2
+            echo "📌 DEPLOY_LEVELS=$DEPLOY_LEVELS"
+            mapfile -t levels < <(echo "$DEPLOY_LEVELS" | tr ',' '\n')
+            echo "📌 Parsed levels: ${levels[@]}"
 
-              echo "🚪 Deploying outer..."
-              docker-compose -f docker-compose-outer-app.yml down
-              sleep 2
-              docker-compose -f docker-compose-outer-app.yml up -d --build
-              sleep 2
+            echo "🧹 Stopping containers"
+            for level in inner outer infra; do
+              for deploy_level in "${levels[@]}"; do
+                if [ "$deploy_level" = "$level" ]; then
+                  echo "⛔ Stopping $level"
+                  if [ "$level" = "infra" ]; then
+                    docker-compose -f docker-compose-infra.yml down || true
+                  else
+                    docker-compose -f docker-compose-${level}-app.yml down || true
+                  fi
+                  echo "⏳ Waiting after stopping $level..."
+                  sleep 5
+                fi
+              done
+            done
 
-              echo "🧩 Deploying inner..."
-              docker-compose -f docker-compose-inner-app.yml down
-              sleep 2
-              docker-compose -f docker-compose-inner-app.yml up -d --build
-
-            elif [ "$DEPLOY_LEVEL" = "outer" ]; then
-              echo "🚪 Deploying outer..."
-              docker-compose -f docker-compose-outer-app.yml down
-              sleep 2
-              docker-compose -f docker-compose-outer-app.yml up -d --build
-              sleep 2
-
-              echo "🧩 Deploying inner..."
-              docker-compose -f docker-compose-inner-app.yml down
-              sleep 2
-              docker-compose -f docker-compose-inner-app.yml up -d --build
-
-            elif [ "$DEPLOY_LEVEL" = "inner" ]; then
-              echo "🧩 Deploying inner..."
-              docker-compose -f docker-compose-inner-app.yml down
-              sleep 2
-              docker-compose -f docker-compose-inner-app.yml up -d --build
-            fi
+            echo "🚀 Starting containers"
+            for level in infra outer inner; do
+              for deploy_level in "${levels[@]}"; do
+                if [ "$deploy_level" = "$level" ]; then
+                  echo "🔼 Starting $level"
+                  if [ "$level" = "infra" ]; then
+                    docker-compose -f docker-compose-infra.yml up -d --build
+                    sleep 30
+                  else
+                    docker-compose -f docker-compose-${level}-app.yml up -d --build
+                    sleep 15
+                  fi
+                fi
+              done
+            done

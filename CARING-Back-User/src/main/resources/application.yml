@@ -27,5 +27,5 @@ springdoc:
   api-docs:
     path: /v3/api-docs        # OpenAPI 경로 명시
   servers:
-    - url: http://localhost:8000/user-service  # Gateway 주소 + prefix
+    - url: http://localhost:8000/user-service  # Gateway 주소
       description: Gateway를 통한 User-Service API

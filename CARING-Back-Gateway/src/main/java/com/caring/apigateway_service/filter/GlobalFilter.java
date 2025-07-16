@@ -21,6 +21,7 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             logPreFilter(config, request);
+            log.info("test");
 
             return chain.filter(exchange)
                     .doOnError(throwable -> log.error("Error occurred during request processing: {}", throwable.getMessage(), throwable))

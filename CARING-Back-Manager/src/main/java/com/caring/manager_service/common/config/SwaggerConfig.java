@@ -10,6 +10,7 @@ import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @RequiredArgsConstructor
 @Configuration
@@ -17,6 +18,8 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(title = "API Document", description = "MANAGER SERVICE 명세서", version = "v3")
 )
 public class SwaggerConfig {
+
+    private final Environment env;
 
     @Bean
     public OpenAPI openAPI() {
@@ -34,7 +37,7 @@ public class SwaggerConfig {
 
 
         return new OpenAPI()
-                .addServersItem(new Server().url("/manager-service"))
+                .addServersItem(new Server().url(env.getProperty("openapi.service.url")))
                 .addSecurityItem(securityRequirement)
                 .components(components);
     }
