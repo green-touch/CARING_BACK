@@ -37,7 +37,7 @@ public class SwaggerConfig {
 
 
         return new OpenAPI()
-                .addServersItem(new Server().url("/user-service"))
+                .addServersItem(new Server().url(env.getProperty("openapi.service.url")))
                 .addSecurityItem(securityRequirement)
                 .components(components);
     }
