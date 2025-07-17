@@ -79,4 +79,19 @@ public class UserDomainServiceImpl implements UserDomainService {
         }
         user.changePassword(encodedPassword);
     }
+
+    @Override
+    public void updatePhoneNumber(User user, String phoneNumber) {
+        user.changePhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public void updateAddress(User user, String roadAddress, String detailAddress) {
+        user.changeAddress(roadAddress, detailAddress);
+    }
+
+    @Override
+    public void updateMemo(User user, String memo) {
+        user.changeMemo(memo);
+    }
 }

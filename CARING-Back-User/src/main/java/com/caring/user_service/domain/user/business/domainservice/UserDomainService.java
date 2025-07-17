@@ -12,4 +12,10 @@ public interface UserDomainService {
     User registerUserWithShelterUuid(String name, String password, String shelterUuid);
 
     void resetPassword(User user, String encodedPassword);
+
+    void updatePhoneNumber(User user, String phoneNumber);
+
+    void updateAddress(User user, String roadAddress, String detailAddress);
+
+    void updateMemo(User user, String memo);
 }
