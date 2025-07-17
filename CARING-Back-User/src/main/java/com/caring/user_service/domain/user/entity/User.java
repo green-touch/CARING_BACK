@@ -43,13 +43,17 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     @Column(unique = true)
     private String userUuid;
+
     @Column(name = "member_code", unique = true)
     private String memberCode;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     private String password;
+
     private String name;
+
     @Column(name = "shelter_uuid")
     private String shelterUuid;
 
@@ -71,7 +75,10 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "memo", length = 500)
+    private String memo;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<EmergencyContact> emergencyContacts = new ArrayList<>();
 
     @Override
@@ -94,5 +101,20 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     public void changePassword(String encodedPassword) {
         this.password = encodedPassword;
+    }
+
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void changeAddress(String roadAddress, String detailAddress) {
+        if (!roadAddress.isEmpty())
+            this.roadAddress = roadAddress;
+        if (!detailAddress.isEmpty())
+            this.detailAddress = detailAddress;
+    }
+
+    public void changeMemo(String memo) {
+        this.memo = memo;
     }
 }

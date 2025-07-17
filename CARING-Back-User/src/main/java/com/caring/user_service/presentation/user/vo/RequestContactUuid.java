@@ -7,9 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ResponseEmergencyContact {
-    private final String contactName;
-    private final String contactRelationship;
-    private final String contactPhoneNumber;
+public class RequestContactUuid {
+
     private final String contactUuid;
 }
