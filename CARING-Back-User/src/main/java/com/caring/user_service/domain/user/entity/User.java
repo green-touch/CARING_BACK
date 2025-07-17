@@ -107,11 +107,13 @@ public class User extends BaseTimeEntity implements UserDetails {
         this.phoneNumber = phoneNumber;
     }
 
-    public void changeAddress(String roadAddress, String detailAddress) {
+    public void changeAddress(String roadAddress, String detailAddress, String postalCode) {
         if (!roadAddress.isEmpty())
             this.roadAddress = roadAddress;
         if (!detailAddress.isEmpty())
             this.detailAddress = detailAddress;
+        if (!postalCode.isEmpty())
+            this.postalCode = postalCode;
     }
 
     public void changeMemo(String memo) {

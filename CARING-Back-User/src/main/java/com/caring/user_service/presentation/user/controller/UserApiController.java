@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "[회원(AUTH)]")
@@ -104,28 +105,28 @@ public class UserApiController {
 
     @Operation(summary = "유저가 비상연락망 편집 beta (관리자가 수정하는건 권한 문제 해결후 변경 예정) 현재 개발용")
     @PatchMapping("/emergency-contacts")
-    public ResponseEntity<Void> deleteEmergencyContact(@RequestBody RequestEmergencyContactWithContactUuid request) {
+    public ResponseEntity<Void> updateEmergencyContact(@RequestBody RequestEmergencyContactWithContactUuid request) {
         updateEmergencyContactUseCase.execute(request);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "memberCode를 통해 유저의 연락처를 업데이트 합니다.")
-    @PatchMapping("/{memberCode}/phone-number")
-    public ResponseEntity<Void> updateUserPhoneNumber(@PathVariable String memberCode, RequestPhoneNumber request) {
+    @PatchMapping("/phone-number")
+    public ResponseEntity<Void> updateUserPhoneNumber(@RequestParam String memberCode, @RequestBody RequestPhoneNumber request) {
         updateUserPhoneNumberUseCase.execute(memberCode, request.getPhoneNumber());
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "memberCode를 통해 유저의 주소를 업데이트 합니다.")
-    @PatchMapping("/{memberCode}/address")
-    public ResponseEntity<Void> updateUserAddress(@PathVariable String memberCode, RequestAddress request) {
+    @PatchMapping("/address")
+    public ResponseEntity<Void> updateUserAddress(@RequestParam String memberCode, @RequestBody RequestAddress request) {
         updateUserAddressUseCase.execute(memberCode, request);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "memberCode를 통해 유저의 메모를 추가(업데이트) 합니다. 해당 API만 POST이오니 참고 바랍니다.")
-    @PostMapping("/{memberCode}/memo")
-    public ResponseEntity<Void> updateUserMemo(@PathVariable String memberCode, RequestMemo request) {
+    @PostMapping("/memo")
+    public ResponseEntity<Void> updateUserMemo(@RequestParam String memberCode, @RequestBody RequestMemo request) {
         updateUserMemoUseCase.execute(memberCode, request.getMemo());
         return ResponseEntity.noContent().build();
     }

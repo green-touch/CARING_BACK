@@ -19,6 +19,7 @@ public class UpdateUserAddressUseCase {
     public void execute(String memberCode, RequestAddress requestAddress) {
         User user = userAdaptor.queryUserByMemberCode(memberCode);
 
-        userDomainService.updateAddress(user, requestAddress.getRoadAddress(), requestAddress.getDetailAddress());
+        userDomainService.updateAddress(user, requestAddress.getRoadAddress(), requestAddress.getDetailAddress(),
+                requestAddress.getPostalCode());
     }
 }

@@ -10,4 +10,5 @@ import lombok.Getter;
 public class RequestAddress {
     private final String roadAddress;
     private final String detailAddress;
+    private final String postalCode;
 }

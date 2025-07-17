@@ -15,7 +15,7 @@ public interface UserDomainService {
 
     void updatePhoneNumber(User user, String phoneNumber);
 
-    void updateAddress(User user, String roadAddress, String detailAddress);
+    void updateAddress(User user, String roadAddress, String detailAddress, String postalCode);
 
     void updateMemo(User user, String memo);
 }

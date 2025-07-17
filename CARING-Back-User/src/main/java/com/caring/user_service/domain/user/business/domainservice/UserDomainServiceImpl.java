@@ -86,8 +86,8 @@ public class UserDomainServiceImpl implements UserDomainService {
     }
 
     @Override
-    public void updateAddress(User user, String roadAddress, String detailAddress) {
-        user.changeAddress(roadAddress, detailAddress);
+    public void updateAddress(User user, String roadAddress, String detailAddress, String postalCode) {
+        user.changeAddress(roadAddress, detailAddress, postalCode);
     }
 
     @Override
