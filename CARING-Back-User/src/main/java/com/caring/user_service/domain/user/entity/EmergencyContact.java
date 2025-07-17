@@ -33,7 +33,7 @@ public class EmergencyContact {
     @JoinColumn(name = "user_id") // 외래 키
     private User user;
 
-    @Column(unique = true)
+    @Column(name = "contact_uuid", unique = true)
     private String contactUuid;
 
     @Column(name = "contact_name", nullable = false)
