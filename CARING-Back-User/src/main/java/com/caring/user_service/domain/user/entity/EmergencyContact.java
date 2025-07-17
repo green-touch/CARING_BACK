@@ -33,6 +33,9 @@ public class EmergencyContact {
     @JoinColumn(name = "user_id") // 외래 키
     private User user;
 
+    @Column(unique = true)
+    private String contactUuid;
+
     @Column(name = "contact_name", nullable = false)
     private String contactName;
 
@@ -41,4 +44,16 @@ public class EmergencyContact {
 
     @Column(name = "contact_phone_number", nullable = false)
     private String contactPhoneNumber;
+
+    public void changeName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public void changePhoneNumber(String contactPhoneNumber) {
+        this.contactPhoneNumber = contactPhoneNumber;
+    }
+
+    public void changeRelationship(String contactRelationship) {
+        this.contactRelationship = contactRelationship;
+    }
 }
