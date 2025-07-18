@@ -58,7 +58,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String shelterUuid;
 
     @Column(name = "birth_date")
-    private String birthDate; // ex: 19980505 (String)
+    private String birthDate; // ex: 980505 (String)
 
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
