@@ -24,6 +24,7 @@ spring:
           - RemoveRequestHeader=Cookie
           - RewritePath=/user-service/(?<segment>.*), /${segment}
 
+        # TODO: 차후 Internal API는 내부 서비스끼리만 접근 가능하도록 필터 추가 적용 필요함.
         - id: user-service-internal
           uri: lb://USER-SERVICE
           predicates:
