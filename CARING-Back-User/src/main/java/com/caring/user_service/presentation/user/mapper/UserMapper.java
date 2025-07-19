@@ -4,6 +4,7 @@ import com.caring.user_service.domain.user.entity.User;
 import com.caring.user_service.presentation.dto.UserDTO;
 import com.caring.user_service.presentation.user.vo.RequestUser;
 import com.caring.user_service.presentation.user.vo.ResponseUser;
+import com.caring.user_service.presentation.user.vo.ResponseUserDetailInfo;
 import com.caring.user_service.presentation.user.vo.ResponseUserHomeInfo;
 import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
@@ -22,4 +23,6 @@ public interface UserMapper {
     ResponseUserHomeInfo toResponseUserHomeInfoVo(User user);
 
     UserDTO toDTO(RequestUser requestUser);
+
+    ResponseUserDetailInfo toResponseUserDetailInfoVo(User user);
 }

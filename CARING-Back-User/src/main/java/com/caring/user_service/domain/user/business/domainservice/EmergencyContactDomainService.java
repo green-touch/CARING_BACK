@@ -1,8 +1,13 @@
 package com.caring.user_service.domain.user.business.domainservice;
 
+import com.caring.user_service.domain.user.entity.EmergencyContact;
 import com.caring.user_service.domain.user.entity.User;
 
 public interface EmergencyContactDomainService {
 
     void addEmergencyContact(User user, String name, String relationship, String phoneNumber);
+
+    void updateEmergencyContact(EmergencyContact emergencyContact, String name, String relationship, String phoneNumber);
+
+    void deleteEmergencyContact(EmergencyContact emergencyContact);
 }

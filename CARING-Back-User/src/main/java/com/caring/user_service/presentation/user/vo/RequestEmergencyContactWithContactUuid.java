@@ -5,9 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 @AllArgsConstructor
-public class ResponseEmergencyContact {
+@Builder
+public class RequestEmergencyContactWithContactUuid {
+
     private final String contactName;
     private final String contactRelationship;
     private final String contactPhoneNumber;
