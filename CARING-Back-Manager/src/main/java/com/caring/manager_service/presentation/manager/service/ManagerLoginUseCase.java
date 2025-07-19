@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ManagerLoginUseCase {
-
     private final ManagerAdaptor managerAdaptor;
     private final ManagerValidator managerValidator;
 

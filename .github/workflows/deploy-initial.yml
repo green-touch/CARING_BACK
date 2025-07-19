@@ -65,13 +65,13 @@ jobs:
             docker-compose -f docker-compose-infra.yml down
             sleep 2
             docker-compose -f docker-compose-infra.yml up -d --build
-            sleep 2
+            sleep 60
 
             echo "🚪 Deploying outer..."
             docker-compose -f docker-compose-outer-app.yml down
             sleep 2
             docker-compose -f docker-compose-outer-app.yml up -d --build
-            sleep 2
+            sleep 60
 
             echo "🧩 Deploying inner..."
             docker-compose -f docker-compose-inner-app.yml down
