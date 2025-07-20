@@ -20,7 +20,9 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,18 +45,22 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     @Column(unique = true)
     private String userUuid;
+
     @Column(name = "member_code", unique = true)
     private String memberCode;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
     private String password;
+
     private String name;
+
     @Column(name = "shelter_uuid")
     private String shelterUuid;
 
     @Column(name = "birth_date")
-    private String birthDate; // ex: 19980505 (String)
+    private LocalDate birthDate;
 
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
@@ -71,7 +77,10 @@ public class User extends BaseTimeEntity implements UserDetails {
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(name = "memo", length = 500)
+    private String memo;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<EmergencyContact> emergencyContacts = new ArrayList<>();
 
     @Override
@@ -94,5 +103,22 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     public void changePassword(String encodedPassword) {
         this.password = encodedPassword;
+    }
+
+    public void changePhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void changeAddress(String roadAddress, String detailAddress, String postalCode) {
+        if (StringUtils.hasText(roadAddress))
+            this.roadAddress = roadAddress;
+        if (StringUtils.hasText(detailAddress))
+            this.detailAddress = detailAddress;
+        if (StringUtils.hasText(postalCode))
+            this.postalCode = postalCode;
+    }
+
+    public void changeMemo(String memo) {
+        this.memo = memo;
     }
 }

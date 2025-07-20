@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @UseCase
 @Transactional
 @RequiredArgsConstructor
-public class AddEmergencyContactsUseCase {
+public class AddEmergencyContactUseCase {
 
     private final UserAdaptor userAdaptor;
     private final EmergencyContactDomainService emergencyContactDomainService;
@@ -21,7 +21,6 @@ public class AddEmergencyContactsUseCase {
     public void execute(RequestEmergencyContact request) {
         User user = userAdaptor.queryUserByMemberCode(request.getMemberCode());
 
-        emergencyContactDomainService.addEmergencyContact(
-                user, emergencyContactMapper.toEmergencyContactDTO(request));
+        emergencyContactDomainService.addEmergencyContact(user, emergencyContactMapper.toEmergencyContactDTO(request));
     }
 }
