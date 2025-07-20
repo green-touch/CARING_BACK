@@ -41,7 +41,7 @@ public class ManagerAdaptorImpl implements ManagerAdaptor {
     }
 
     @Override
-    public List<String> queryUserUuidsByManager(Manager manager) {
-        return managerGroupRepository.findUsersByManager(manager);
+    public List<String> queryUserUuidsByManager(String managerCode) {
+        return managerGroupRepository.findAllByManagerMemberCode(managerCode);
     }
 }

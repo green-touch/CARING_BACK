@@ -14,6 +14,6 @@ public interface ManagerAdaptor {
 
     List<Manager> queryAll();
 
-    List<String> queryUserUuidsByManager(Manager manager);
+    List<String> queryUserUuidsByManager(String managerCode);
 
 }
