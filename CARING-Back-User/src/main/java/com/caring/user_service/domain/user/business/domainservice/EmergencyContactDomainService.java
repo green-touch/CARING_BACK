@@ -2,12 +2,13 @@ package com.caring.user_service.domain.user.business.domainservice;
 
 import com.caring.user_service.domain.user.entity.EmergencyContact;
 import com.caring.user_service.domain.user.entity.User;
+import com.caring.user_service.presentation.dto.EmergencyContactDTO;
 
 public interface EmergencyContactDomainService {
 
-    void addEmergencyContact(User user, String name, String relationship, String phoneNumber);
+    void addEmergencyContact(User user, EmergencyContactDTO emergencyContactDTO);
 
-    void updateEmergencyContact(EmergencyContact emergencyContact, String name, String relationship, String phoneNumber);
+    void updateEmergencyContact(EmergencyContact emergencyContact, EmergencyContactDTO emergencyContactDTO);
 
     void deleteEmergencyContact(EmergencyContact emergencyContact);
 }

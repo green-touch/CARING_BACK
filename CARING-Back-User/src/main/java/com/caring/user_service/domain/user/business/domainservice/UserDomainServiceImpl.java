@@ -5,6 +5,7 @@ import com.caring.user_service.domain.user.business.validator.UserValidator;
 import com.caring.user_service.domain.user.entity.Role;
 import com.caring.user_service.domain.user.entity.User;
 import com.caring.user_service.domain.user.repository.UserRepository;
+import com.caring.user_service.presentation.dto.AddressDTO;
 import com.caring.user_service.presentation.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -86,8 +87,8 @@ public class UserDomainServiceImpl implements UserDomainService {
     }
 
     @Override
-    public void updateAddress(User user, String roadAddress, String detailAddress, String postalCode) {
-        user.changeAddress(roadAddress, detailAddress, postalCode);
+    public void updateAddress(User user, AddressDTO dto) {
+        user.changeAddress(dto.getRoadAddress(), dto.getRoadAddress(), dto.getPostalCode());
     }
 
     @Override
