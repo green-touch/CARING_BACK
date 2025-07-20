@@ -2,6 +2,7 @@ package com.caring.manager_service.domain.manager.business.validator;
 
 import com.caring.manager_service.common.annotation.Validator;
 import com.caring.manager_service.domain.manager.entity.Manager;
+import com.caring.manager_service.domain.manager.repository.ManagerGroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,6 +15,7 @@ import org.springframework.util.StringUtils;
 public class ManagerValidatorImpl implements ManagerValidator {
 
     private final PasswordEncoder passwordEncoder;
+    private final ManagerGroupRepository managerGroupRepository;
 
     /**
      * only use in filter, so need to throw filterException
@@ -44,5 +46,10 @@ public class ManagerValidatorImpl implements ManagerValidator {
         if (!StringUtils.hasText(password)) {
             throw new IllegalArgumentException("비밀번호는 빈 문자열일 수 없습니다");
         }
+    }
+
+    @Override
+    public boolean isGroupedUser(String managerCode, String userUuid) {
+        return managerGroupRepository.existsByManagerMemberCodeAndUserUuid(managerCode, userUuid);
     }
 }

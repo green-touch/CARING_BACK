@@ -22,4 +22,13 @@ public class RoleUtil {
             throw new RuntimeException("No matching role found");
         }
     }
+
+    public static boolean checkManagerRole(SuperAuth superAuth, List<String> roles) {
+        if (roles.stream()
+                .map(role -> EnumConvertUtil.convert(SuperAuth.class, role))
+                .noneMatch(superAuth::equals)) {
+            return false;
+        }
+        return true;
+    }
 }

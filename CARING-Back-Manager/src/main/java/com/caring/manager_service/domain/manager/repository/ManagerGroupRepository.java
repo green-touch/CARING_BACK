@@ -14,4 +14,6 @@ public interface ManagerGroupRepository extends JpaRepository<ManagerGroup, Long
 
     @Query("SELECT mg.userUuid FROM ManagerGroup mg WHERE mg.manager.memberCode = :memberCode")
     List<String> findUserUuidListByManagerMemberCode(String memberCode);
+
+    boolean existsByManagerMemberCodeAndUserUuid(String memberCode, String userUuid);
 }

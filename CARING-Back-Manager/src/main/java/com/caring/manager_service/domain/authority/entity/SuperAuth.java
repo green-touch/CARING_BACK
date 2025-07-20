@@ -35,7 +35,12 @@ public enum SuperAuth implements KeyedEnum {
     /**
      * 담당 노인 계정 추가 / 삭제
      */
-    CREATE_OR_DELETE_SENIOR_ACCOUNT("CREATE_OR_DELETE_SENIOR_ACCOUNT");
+    CREATE_OR_DELETE_SENIOR_ACCOUNT("CREATE_OR_DELETE_SENIOR_ACCOUNT"),
+
+    /**
+     * 모든 노인 계정 조회
+     */
+    GET_ALL_SENIOR_ACCOUNT("GET_ALL_SENIOR_ACCOUNT");
 
     private final String key;
 }
