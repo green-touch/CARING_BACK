@@ -15,8 +15,8 @@ public class UpdateUserPhoneNumberUseCase {
     private final UserAdaptor userAdaptor;
     private final UserDomainService userDomainService;
 
-    public void execute(String memberCode, String phoneNumber) {
-        User user = userAdaptor.queryUserByMemberCode(memberCode);
+    public void execute(String userUuid, String phoneNumber) {
+        User user = userAdaptor.queryUserByUserUuid(userUuid);
 
         userDomainService.updatePhoneNumber(user, phoneNumber);
     }

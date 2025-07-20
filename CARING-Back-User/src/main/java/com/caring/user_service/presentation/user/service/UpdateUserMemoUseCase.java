@@ -15,8 +15,8 @@ public class UpdateUserMemoUseCase {
     private final UserAdaptor userAdaptor;
     private final UserDomainService userDomainService;
 
-    public void execute(String memberCode, String memo) {
-        User user = userAdaptor.queryUserByMemberCode(memberCode);
+    public void execute(String userUuid, String memo) {
+        User user = userAdaptor.queryUserByUserUuid(userUuid);
 
         userDomainService.updateMemo(user, memo);
     }

@@ -110,24 +110,24 @@ public class UserApiController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "memberCode를 통해 유저의 연락처를 업데이트 합니다.")
+    @Operation(summary = "userUuid를 통해 유저의 연락처를 업데이트 합니다.")
     @PatchMapping("/phone-number")
-    public ResponseEntity<Void> updateUserPhoneNumber(@RequestParam String memberCode, @RequestBody RequestPhoneNumber request) {
-        updateUserPhoneNumberUseCase.execute(memberCode, request.getPhoneNumber());
+    public ResponseEntity<Void> updateUserPhoneNumber(@RequestParam String userUuid, @RequestBody RequestPhoneNumber request) {
+        updateUserPhoneNumberUseCase.execute(userUuid, request.getPhoneNumber());
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "memberCode를 통해 유저의 주소를 업데이트 합니다.")
+    @Operation(summary = "userUuid를 통해 유저의 주소를 업데이트 합니다.")
     @PatchMapping("/address")
-    public ResponseEntity<Void> updateUserAddress(@RequestParam String memberCode, @RequestBody RequestAddress request) {
-        updateUserAddressUseCase.execute(memberCode, request);
+    public ResponseEntity<Void> updateUserAddress(@RequestParam String userUuid, @RequestBody RequestAddress request) {
+        updateUserAddressUseCase.execute(userUuid, request);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "memberCode를 통해 유저의 메모를 추가(업데이트) 합니다. 해당 API만 POST이오니 참고 바랍니다.")
-    @PostMapping("/memo")
-    public ResponseEntity<Void> updateUserMemo(@RequestParam String memberCode, @RequestBody RequestMemo request) {
-        updateUserMemoUseCase.execute(memberCode, request.getMemo());
+    @Operation(summary = "userUuid를 통해 유저의 메모를 추가(업데이트) 합니다.")
+    @PatchMapping("/memo")
+    public ResponseEntity<Void> updateUserMemo(@RequestParam String userUuid, @RequestBody RequestMemo request) {
+        updateUserMemoUseCase.execute(userUuid, request.getMemo());
         return ResponseEntity.noContent().build();
     }
 }
