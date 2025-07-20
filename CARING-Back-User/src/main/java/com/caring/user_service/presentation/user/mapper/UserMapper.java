@@ -1,7 +1,9 @@
 package com.caring.user_service.presentation.user.mapper;
 
 import com.caring.user_service.domain.user.entity.User;
+import com.caring.user_service.presentation.dto.AddressDTO;
 import com.caring.user_service.presentation.dto.UserDTO;
+import com.caring.user_service.presentation.user.vo.RequestAddress;
 import com.caring.user_service.presentation.user.vo.RequestUser;
 import com.caring.user_service.presentation.user.vo.ResponseUser;
 import com.caring.user_service.presentation.user.vo.ResponseUserDetailInfo;
@@ -25,4 +27,6 @@ public interface UserMapper {
     UserDTO toDTO(RequestUser requestUser);
 
     ResponseUserDetailInfo toResponseUserDetailInfoVo(User user);
+
+    AddressDTO toAddressDto(RequestAddress requestAddress);
 }
