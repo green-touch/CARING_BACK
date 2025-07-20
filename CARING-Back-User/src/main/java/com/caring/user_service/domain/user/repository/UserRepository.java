@@ -4,6 +4,7 @@ import com.caring.user_service.domain.user.entity.User;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,5 +15,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByUserUuidIn(List<String> userUuids);
 
-    Optional<User> findByNameAndBirthDateAndPhoneNumber(String name, String birthDate, String phoneNumber);
+    Optional<User> findByNameAndBirthDateAndPhoneNumber(String name, LocalDate birthDate, String phoneNumber);
 }

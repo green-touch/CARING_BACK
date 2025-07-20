@@ -20,7 +20,9 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,7 +60,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String shelterUuid;
 
     @Column(name = "birth_date")
-    private String birthDate; // ex: 980505 (String)
+    private LocalDate birthDate;
 
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;
@@ -108,11 +110,11 @@ public class User extends BaseTimeEntity implements UserDetails {
     }
 
     public void changeAddress(String roadAddress, String detailAddress, String postalCode) {
-        if (!roadAddress.isEmpty())
+        if (StringUtils.hasText(roadAddress))
             this.roadAddress = roadAddress;
-        if (!detailAddress.isEmpty())
+        if (StringUtils.hasText(detailAddress))
             this.detailAddress = detailAddress;
-        if (!postalCode.isEmpty())
+        if (StringUtils.hasText(postalCode))
             this.postalCode = postalCode;
     }
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -18,7 +19,7 @@ public class ResponseUserDetailInfo {
     private final String postalCode;
     private final String roadAddress;
     private final String detailAddress;
-    private final String birthDate;
+    private final LocalDate birthDate;
     private final String phoneNumber;
     private final String memo;
     private final List<ResponseEmergencyContact> emergencyContacts;
