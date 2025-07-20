@@ -1,0 +1,31 @@
+server:
+  port: 0   # random port
+
+spring:
+  application:
+    name: shelter-service
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html   # Swagger UI 경로 명시
+    enabled: true             # Swagger UI 활성화
+  api-docs:
+    path: /v3/api-docs        # OpenAPI 경로 명시
+  servers:
+    - url: http://localhost:8000/shelter-service  # Gateway 주소
+      description: Gateway를 통한 Shelter-Service API
