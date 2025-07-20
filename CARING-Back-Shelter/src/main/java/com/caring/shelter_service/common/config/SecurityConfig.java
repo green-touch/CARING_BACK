@@ -1,5 +1,6 @@
 package com.caring.shelter_service.common.config;
 
+import com.caring.shelter_service.common.consts.StaticVariable;
 import com.caring.shelter_service.common.service.MicroServiceIpResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.List;
 
+import static com.caring.shelter_service.common.consts.StaticVariable.PERMIT_ALL_PATHS;
+import static com.caring.shelter_service.common.consts.StaticVariable.SWAGGER_PATHS;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 
@@ -62,8 +65,8 @@ public class SecurityConfig {
                     authorizeRequest
                             .requestMatchers("/", "/.well-known/**", "/css/**", "/*.ico",
                                     "/error", "/images/**").permitAll()
-                            .requestMatchers(permitAllRequest()).permitAll()
-                            .requestMatchers(additionalSwaggerRequests()).permitAll()
+                            .requestMatchers(PERMIT_ALL_PATHS).permitAll()
+                            .requestMatchers(SWAGGER_PATHS).permitAll()
                             .anyRequest().access((authentication, request) -> {
                                 String clientIp = request.getRequest().getRemoteHost();
                                 String gatewayIp = microServiceIpResolver.resolveGatewayIp();
@@ -79,28 +82,6 @@ public class SecurityConfig {
                 });
     }
 
-    private RequestMatcher[] permitAllRequest() {
-        List<RequestMatcher> requestMatchers = List.of(
-                antMatcher("/health_check"),
-                antMatcher("/actuator/**"),
-                antMatcher("/welcome"),
-                antMatcher("/v1/api/access/**")
-        );
-        return requestMatchers.toArray(RequestMatcher[]::new);
-    }
-
-    private RequestMatcher[] additionalSwaggerRequests() {
-        List<RequestMatcher> requestMatchers = List.of(
-                antMatcher("/swagger-ui/**"),
-                antMatcher("/swagger-ui"),
-                antMatcher("/swagger-ui.html"),
-                antMatcher("/swagger/**"),
-                antMatcher("/swagger-resources/**"),
-                antMatcher("/v3/api-docs/**"),
-                antMatcher("/profile")
-        );
-        return requestMatchers.toArray(RequestMatcher[]::new);
-    }
 
 //    private RequestMatcher[] authRelatedEndpoints() {
 //        List<RequestMatcher> requestMatchers = List.of(
