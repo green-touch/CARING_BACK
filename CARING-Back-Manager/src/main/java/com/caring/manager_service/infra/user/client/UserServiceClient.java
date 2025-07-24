@@ -1,9 +1,7 @@
 package com.caring.manager_service.infra.user.client;
 
 import com.caring.manager_service.infra.user.vo.RequestEmergencyContact;
-import com.caring.manager_service.infra.user.vo.request.RequestEmergencyContactWithContactUuid;
-import com.caring.manager_service.infra.user.vo.request.RequestUser;
-import com.caring.manager_service.infra.user.vo.request.RequestUserWithShelterUuid;
+import com.caring.manager_service.infra.user.vo.request.*;
 import com.caring.manager_service.infra.user.vo.response.ResponseUser;
 import com.caring.manager_service.infra.user.vo.response.ResponseUserDetailInfo;
 import com.caring.manager_service.infra.user.vo.response.ResponseUserUuid;
@@ -38,5 +36,17 @@ public interface UserServiceClient {
     void updateEmergencyContact(
             @PathVariable String contactUuid,
             @RequestBody RequestEmergencyContactWithContactUuid request);
+
+    @PatchMapping("/{userUuid}/phone-number")
+    void updateUserPhoneNumber(@PathVariable String userUuid,
+                               @RequestBody RequestPhoneNumber request);
+
+    @PatchMapping("/{userUuid}/address")
+    void updateUserAddress(@PathVariable String userUuid,
+                           @RequestBody RequestAddress request);
+
+    @PatchMapping("/{userUuid}/memo")
+    void updateUserMemo(@RequestParam String userUuid,
+                        @RequestBody RequestMemo request);
 
 }

@@ -4,9 +4,7 @@ package com.caring.manager_service.presentation.user.controller;
 import com.caring.manager_service.common.annotation.ManagerCode;
 import com.caring.manager_service.common.annotation.ManagerRoles;
 import com.caring.manager_service.infra.user.vo.RequestEmergencyContact;
-import com.caring.manager_service.infra.user.vo.request.RequestEmergencyContactWithContactUuid;
-import com.caring.manager_service.infra.user.vo.request.RequestUser;
-import com.caring.manager_service.infra.user.vo.request.RequestUserWithShelterUuid;
+import com.caring.manager_service.infra.user.vo.request.*;
 import com.caring.manager_service.infra.user.vo.response.ResponseUser;
 import com.caring.manager_service.infra.user.vo.response.ResponseUserDetailInfo;
 import com.caring.manager_service.infra.user.vo.response.ResponseUserUuid;
@@ -35,6 +33,9 @@ public class UserApiController {
     private final SaveEmergencyContactByManagerUseCase saveEmergencyContactByManagerUseCase;
     private final EditEmergencyContactByManagerUseCase editEmergencyContactByManagerUseCase;
     private final RemoveEmergencyContactByManagerUseCase removeEmergencyContactByManagerUseCase;
+    private final EditUserPhoneNumberByManagerUseCase editUserPhoneNumberByManagerUseCase;
+    private final EditUserAddressByManagerUseCase editUserAddressByManagerUseCase;
+    private final EditUserMemoByManagerUseCase editUserMemoByManagerUseCase;
 
     @Operation(summary = "노인 계정을 생성합니다")
     @PostMapping("/shelters/{shelterId}")
@@ -93,6 +94,37 @@ public class UserApiController {
                                                                       @PathVariable String userUuid,
                                                                       @PathVariable String contactUuid) {
         removeEmergencyContactByManagerUseCase.execute(managerCode, roles, userUuid, contactUuid);
+        return ResponseEntity.ok(HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "담당자가 보호하는 노인의 전화번호 정보를 수정합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
+    @PatchMapping("/{userUuid}/phone-number")
+    public ResponseEntity<HttpStatus> editUserPhoneNumberByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+                                                                   @ManagerRoles List<String> roles,
+                                                                   @PathVariable String userUuid,
+                                                                   @RequestBody RequestPhoneNumber requestPhoneNumber) {
+        editUserPhoneNumberByManagerUseCase.execute(managerCode, roles, userUuid, requestPhoneNumber);
+        return ResponseEntity.ok(HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "담당자가 보호하는 노인의 주소 정보를 수정합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
+    @PatchMapping("/{userUuid}/address")
+    public ResponseEntity<HttpStatus> editUserAddressByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+                                                               @ManagerRoles List<String> roles,
+                                                               @PathVariable String userUuid,
+                                                               @RequestBody RequestAddress requestAddress) {
+        editUserAddressByManagerUseCase.execute(managerCode, roles, userUuid, requestAddress);
+        return ResponseEntity.ok(HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "담당자가 보호하는 노인의 주소 정보를 수정합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
+    @PatchMapping("/{userUuid}/memo")
+    public ResponseEntity<HttpStatus> editUserMemoByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+                                                            @ManagerRoles List<String> roles,
+                                                            @PathVariable String userUuid,
+                                                            @RequestBody RequestMemo requestMemo) {
+
+        editUserMemoByManagerUseCase.execute(managerCode, roles, userUuid, requestMemo);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 

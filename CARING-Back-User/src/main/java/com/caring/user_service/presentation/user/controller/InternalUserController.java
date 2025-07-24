@@ -79,23 +79,24 @@ public class InternalUserController {
     }
 
     @Operation(hidden = true)
-    @PatchMapping("/phone-number")
-    public ResponseEntity<Void> updateUserPhoneNumber(@RequestParam String userUuid, @RequestBody RequestPhoneNumber request) {
+    @PatchMapping("/{userUuid}/phone-number")
+    public void updateUserPhoneNumber(@PathVariable String userUuid,
+                                                      @RequestBody RequestPhoneNumber request) {
         updateUserPhoneNumberUseCase.execute(userUuid, request.getPhoneNumber());
-        return ResponseEntity.noContent().build();
     }
 
     @Operation(hidden = true)
-    @PatchMapping("/address")
-    public ResponseEntity<Void> updateUserAddress(@RequestParam String userUuid, @RequestBody RequestAddress request) {
+    @PatchMapping("/{userUuid}/address")
+    public void updateUserAddress(@PathVariable String userUuid,
+                                  @RequestBody RequestAddress request) {
         updateUserAddressUseCase.execute(userUuid, request);
-        return ResponseEntity.noContent().build();
     }
 
     @Operation(hidden = true)
-    @PatchMapping("/memo")
-    public ResponseEntity<Void> updateUserMemo(@RequestParam String userUuid, @RequestBody RequestMemo request) {
+    @PatchMapping("/{userUuid}/memo")
+    public void updateUserMemo(@PathVariable String userUuid,
+                               @RequestBody RequestMemo request) {
+
         updateUserMemoUseCase.execute(userUuid, request.getMemo());
-        return ResponseEntity.noContent().build();
     }
 }
