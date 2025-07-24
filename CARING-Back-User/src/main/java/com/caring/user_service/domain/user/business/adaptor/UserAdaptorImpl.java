@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Adaptor
@@ -51,7 +52,7 @@ public class UserAdaptorImpl implements UserAdaptor{
     }
 
     @Override
-    public User queryUserByNameAndBirthDateAndPhoneNumber(String name, String birthDate, String phoneNumber) {
+    public User queryUserByNameAndBirthDateAndPhoneNumber(String name, LocalDate birthDate, String phoneNumber) {
         return userRepository.findByNameAndBirthDateAndPhoneNumber(name, birthDate, phoneNumber)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "User not found with name: " + name + " and birthDate: " + birthDate +

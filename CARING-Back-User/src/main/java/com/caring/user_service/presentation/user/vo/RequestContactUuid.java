@@ -4,13 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
-
 @Getter
 @Builder
 @AllArgsConstructor
-public class RequestMemberCode {
-    private final String name;
-    private final LocalDate birthDate;
-    private final String phoneNumber;
+public class RequestContactUuid {
+
+    private final String contactUuid;
 }

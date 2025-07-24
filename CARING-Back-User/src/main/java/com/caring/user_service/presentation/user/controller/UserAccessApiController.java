@@ -33,6 +33,7 @@ public class UserAccessApiController {
     private final FindMyMemberCodeUseCase findMyMemberCodeUseCase;
     private final ResetUserPasswordUseCase resetUserPasswordUseCase;
 
+    //TODO: 유저의 비상연락망 리스트 추가
     @Operation(summary = "새로운 유저를 등록합니다.")
     @PostMapping("/register")
     public String registerUser(@RequestBody RequestUser requestUser) {
