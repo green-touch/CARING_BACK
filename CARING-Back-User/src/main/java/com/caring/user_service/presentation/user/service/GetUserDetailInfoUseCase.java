@@ -16,8 +16,8 @@ public class GetUserDetailInfoUseCase {
     private final UserAdaptor userAdaptor;
     private final UserMapper userMapper;
 
-    public ResponseUserDetailInfo execute(String memberCode) {
-        User user = userAdaptor.queryUserByMemberCode(memberCode);
+    public ResponseUserDetailInfo execute(String userUuid) {
+        User user = userAdaptor.queryUserByUserUuid(userUuid);
 
         return userMapper.toResponseUserDetailInfoVo(user);
     }

@@ -17,7 +17,7 @@ import java.util.List;
 public interface UserServiceClient {
 
     @PostMapping("/internal/users/register")
-    String registerUser(@RequestBody RequestUser request);
+    ResponseUserUuid registerUser(@RequestBody RequestUserWithShelterUuid request);
 
     @GetMapping("/internal/users")
     List<ResponseUser> queryUserByUuidList(@RequestBody List<String> uuidList);
@@ -25,8 +25,8 @@ public interface UserServiceClient {
     @PostMapping("/v1/api/access/users/register")
     String registerUser(@RequestBody RequestUser requestUser);
 
-    @GetMapping("/internal/users/info")
-    ResponseUserDetailInfo getUserDetailInfo(@RequestParam String memberCode);
+    @GetMapping("/internal/users/info/{userUuid}")
+    ResponseUserDetailInfo getUserDetailInfo(@RequestParam String userUuid);
     //TODO 비상 연락망 수정
 
 }

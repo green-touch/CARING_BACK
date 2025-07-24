@@ -5,13 +5,9 @@ import com.caring.user_service.presentation.user.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,15 +17,21 @@ import java.util.List;
 @Tag(name = "회원[INTERNAL]", description = "내부 서버 전용 유저 API/ 해당 스웨거는 개발용입니다! 프론트에서 직접 참조 XXX!!!")
 public class InternalUserController {
 
-    private final RegisterUserUseCase registerUserUseCase;
+    private final RegisterUserByManagerUseCase registerUserByManagerUseCase;
     private final GetUserShelterUuidUseCase getUserShelterUuidUseCase;
     private final GetUsersByUuidListUseCase getUsersByUuidListUseCase;
     private final GetUserDetailInfoUseCase getUserDetailInfoUseCase;
+    private final AddEmergencyContactUseCase addEmergencyContactUseCase;
+    private final DeleteEmergencyContactUseCase deleteEmergencyContactUseCase;
+    private final UpdateEmergencyContactUseCase updateEmergencyContactUseCase;
+    private final UpdateUserPhoneNumberUseCase updateUserPhoneNumberUseCase;
+    private final UpdateUserAddressUseCase updateUserAddressUseCase;
+    private final UpdateUserMemoUseCase updateUserMemoUseCase;
 
     @Operation(hidden = true)
     @PostMapping("/register")
-    public String registerUser(@RequestBody RequestUser request) {
-        return registerUserUseCase.execute(request);
+    public ResponseUserUuid registerUser(@RequestBody RequestUserWithShelterUuid request) {
+        return registerUserByManagerUseCase.execute(request);
     }
 
     @Operation(hidden = true)
@@ -50,8 +52,50 @@ public class InternalUserController {
                     "매니저의 권한은 ManagerService에서 확인 후 해당 API를 이용합니다.",
             tags = {"회원[INTERNAL]"} // 태그 지정
     )
-    @GetMapping("/info")
-    public ResponseUserDetailInfo getUserDetailInfo(@RequestParam String memberCode) {
-        return getUserDetailInfoUseCase.execute(memberCode);
+    @GetMapping("/info/{userUuid}")
+    public ResponseUserDetailInfo getUserDetailInfo(@PathVariable String userUuid) {
+        return getUserDetailInfoUseCase.execute(userUuid);
+    }
+
+    @Operation(hidden = true)
+    @PostMapping("/emergency-contacts")
+    public ResponseEntity<Void> saveEmergencyContact(@RequestBody RequestEmergencyContact request) {
+        addEmergencyContactUseCase.execute(request);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(hidden = true)
+    @DeleteMapping("/emergency-contacts")
+    public ResponseEntity<Void> deleteEmergencyContact(@RequestBody RequestContactUuid request) {
+        deleteEmergencyContactUseCase.execute(request.getContactUuid());
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(hidden = true)
+    @PatchMapping("/emergency-contacts")
+    public ResponseEntity<Void> updateEmergencyContact(@RequestBody RequestEmergencyContactWithContactUuid request) {
+        updateEmergencyContactUseCase.execute(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(hidden = true)
+    @PatchMapping("/phone-number")
+    public ResponseEntity<Void> updateUserPhoneNumber(@RequestParam String userUuid, @RequestBody RequestPhoneNumber request) {
+        updateUserPhoneNumberUseCase.execute(userUuid, request.getPhoneNumber());
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(hidden = true)
+    @PatchMapping("/address")
+    public ResponseEntity<Void> updateUserAddress(@RequestParam String userUuid, @RequestBody RequestAddress request) {
+        updateUserAddressUseCase.execute(userUuid, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(hidden = true)
+    @PatchMapping("/memo")
+    public ResponseEntity<Void> updateUserMemo(@RequestParam String userUuid, @RequestBody RequestMemo request) {
+        updateUserMemoUseCase.execute(userUuid, request.getMemo());
+        return ResponseEntity.noContent().build();
     }
 }
