@@ -18,9 +18,9 @@ public class UpdateEmergencyContactUseCase {
     private final EmergencyContactDomainService emergencyContactDomainService;
     private final EmergencyContactMapper emergencyContactMapper;
 
-    public void execute(RequestEmergencyContactWithContactUuid request) {
+    public void execute(String contactUuid, RequestEmergencyContactWithContactUuid request) {
         EmergencyContact emergencyContact = emergencyContactAdaptor
-                .queryEmergencyContactByContactUuid(request.getContactUuid());
+                .queryEmergencyContactByContactUuid(contactUuid);
 
         emergencyContactDomainService.updateEmergencyContact(
                 emergencyContact, emergencyContactMapper.toEmergencyContactDTO(request));

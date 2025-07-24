@@ -65,16 +65,17 @@ public class InternalUserController {
     }
 
     @Operation(hidden = true)
-    @DeleteMapping("/emergency-contacts")
-    public void deleteEmergencyContact(@RequestBody RequestContactUuid request) {
-        deleteEmergencyContactUseCase.execute(request.getContactUuid());
+    @DeleteMapping("/emergency-contacts/{contactUuid}")
+    public void deleteEmergencyContact(@PathVariable String contactUuid) {
+        deleteEmergencyContactUseCase.execute(contactUuid);
     }
 
     @Operation(hidden = true)
-    @PatchMapping("/emergency-contacts")
-    public ResponseEntity<Void> updateEmergencyContact(@RequestBody RequestEmergencyContactWithContactUuid request) {
-        updateEmergencyContactUseCase.execute(request);
-        return ResponseEntity.noContent().build();
+    @PatchMapping("/emergency-contacts/{contactUuid}")
+    public void updateEmergencyContact(
+            @PathVariable String contactUuid,
+            @RequestBody RequestEmergencyContactWithContactUuid request) {
+        updateEmergencyContactUseCase.execute(contactUuid, request);
     }
 
     @Operation(hidden = true)

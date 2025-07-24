@@ -4,15 +4,13 @@ package com.caring.manager_service.presentation.user.controller;
 import com.caring.manager_service.common.annotation.ManagerCode;
 import com.caring.manager_service.common.annotation.ManagerRoles;
 import com.caring.manager_service.infra.user.vo.RequestEmergencyContact;
+import com.caring.manager_service.infra.user.vo.request.RequestEmergencyContactWithContactUuid;
 import com.caring.manager_service.infra.user.vo.request.RequestUser;
 import com.caring.manager_service.infra.user.vo.request.RequestUserWithShelterUuid;
 import com.caring.manager_service.infra.user.vo.response.ResponseUser;
 import com.caring.manager_service.infra.user.vo.response.ResponseUserDetailInfo;
 import com.caring.manager_service.infra.user.vo.response.ResponseUserUuid;
-import com.caring.manager_service.presentation.user.service.GetUserAccountsInChargeUseCase;
-import com.caring.manager_service.presentation.user.service.GetUserDetailInfoByManagerUseCase;
-import com.caring.manager_service.presentation.user.service.RegisterUserAccountByManagerUseCase;
-import com.caring.manager_service.presentation.user.service.SaveEmergencyContactByManagerUseCase;
+import com.caring.manager_service.presentation.user.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,6 +33,8 @@ public class UserApiController {
     private final GetUserAccountsInChargeUseCase getUserAccountsInChargeUseCase;
     private final GetUserDetailInfoByManagerUseCase getUserDetailInfoByManagerUseCase;
     private final SaveEmergencyContactByManagerUseCase saveEmergencyContactByManagerUseCase;
+    private final EditEmergencyContactByManagerUseCase editEmergencyContactByManagerUseCase;
+    private final RemoveEmergencyContactByManagerUseCase removeEmergencyContactByManagerUseCase;
 
     @Operation(summary = "노인 계정을 생성합니다")
     @PostMapping("/shelters/{shelterId}")
@@ -60,7 +60,7 @@ public class UserApiController {
         return getUserAccountsInChargeUseCase.execute(managerCode);
     }
 
-    @Operation(summary = "담당자가 보호하는 노인 계정 정보를 수정합니다.")
+    @Operation(summary = "담당자가 보호하는 노인의 긴급 연락처 정보를 추가합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 추가 가능합니다.")
     @PostMapping("/{userUuid}/emergency-contact")
     public ResponseEntity<HttpStatus> saveEmergencyContactByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
                                                                     @ManagerRoles List<String> roles,
@@ -70,11 +70,32 @@ public class UserApiController {
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
-    @Operation(summary = "노인의 계정 정보를 수정합니다. 이때 보호소 내의 노인 계정을 수정하는 권한이 필요합니다.[구현 x]")
-    @PatchMapping("/{userUuid}/super")
-    public Long editUserAccountBySuperManager() {
-        return null;
+    @Operation(summary = "담당자가 보호하는 노인의 긴급 연락처 정보를 수정합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
+    @PatchMapping("/{userUuid}/emergency-contact/{contactUuid}")
+    public ResponseEntity<HttpStatus> editEmergencyContactByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+                                                                    @ManagerRoles List<String> roles,
+                                                                    @PathVariable String userUuid,
+                                                                    @PathVariable String contactUuid,
+                                                                    @RequestBody RequestEmergencyContactWithContactUuid requestEmergencyContact) {
+        editEmergencyContactByManagerUseCase.execute(
+                managerCode,
+                roles,
+                userUuid,
+                contactUuid,
+                requestEmergencyContact);
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
+
+    @Operation(summary = "담당자가 보호하는 노인의 긴급 연락처 정보를 삭제합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
+    @DeleteMapping("/{userUuid}/emergency-contact/{contactUuid}")
+    public ResponseEntity<HttpStatus> removeEmergencyContactByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+                                                                      @ManagerRoles List<String> roles,
+                                                                      @PathVariable String userUuid,
+                                                                      @PathVariable String contactUuid) {
+        removeEmergencyContactByManagerUseCase.execute(managerCode, roles, userUuid, contactUuid);
+        return ResponseEntity.ok(HttpStatus.CREATED);
+    }
+
 
     @Operation(summary = "노인 계정을 구체적으로 조회합니다.")
     @GetMapping("/{userUuid}")

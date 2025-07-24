@@ -1,6 +1,7 @@
 package com.caring.manager_service.infra.user.client;
 
 import com.caring.manager_service.infra.user.vo.RequestEmergencyContact;
+import com.caring.manager_service.infra.user.vo.request.RequestEmergencyContactWithContactUuid;
 import com.caring.manager_service.infra.user.vo.request.RequestUser;
 import com.caring.manager_service.infra.user.vo.request.RequestUserWithShelterUuid;
 import com.caring.manager_service.infra.user.vo.response.ResponseUser;
@@ -29,5 +30,13 @@ public interface UserServiceClient {
 
     @PostMapping("/internal/users/{userUuid}/emergency-contacts")
     void saveEmergencyContact(@PathVariable String userUuid, @RequestBody RequestEmergencyContact request);
+
+    @DeleteMapping("/emergency-contacts/{contactUuid}")
+    void deleteEmergencyContact(@PathVariable String contactUuid);
+
+    @PatchMapping("/emergency-contacts/{contactUuid}")
+    void updateEmergencyContact(
+            @PathVariable String contactUuid,
+            @RequestBody RequestEmergencyContactWithContactUuid request);
 
 }
