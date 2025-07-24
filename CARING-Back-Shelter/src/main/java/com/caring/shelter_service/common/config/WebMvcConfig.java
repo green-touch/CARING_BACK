@@ -1,8 +1,7 @@
 package com.caring.shelter_service.common.config;
 
 
-import com.caring.user_service.common.service.MemberCodeArgumentResolver;
-import com.caring.user_service.common.service.RolesArgumentResolver;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -21,11 +20,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final Environment env;
 
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new MemberCodeArgumentResolver());
-        argumentResolvers.add(new RolesArgumentResolver());
-    }
+//    @Override
+//    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+//        argumentResolvers.add(new MemberCodeArgumentResolver());
+//        argumentResolvers.add(new RolesArgumentResolver());
+//    }
 
     @Override
     public void addFormatters(FormatterRegistry registry) {

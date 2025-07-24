@@ -93,6 +93,29 @@ services:
     networks:
       - caring-net
 
+  shelter-server:
+    container_name: shelter-service
+    build:
+      context: ./CARING-Back-Shelter
+    ports:
+      - "8083:8080" # 내부 포트 8080 확인!
+    deploy: # 이 부분을 추가합니다.
+      resources:
+        limits:
+          memory: 1024M # 2GB로 메모리 제한 설정 (원하는 값으로 변경)
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SERVER_PROFILE}
+#      SPRING_DATA_REDIS_HOST: redis
+#      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-service:8888
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:mysql://${DATABASE_URL}:3306/caring_shelter?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
+      SPRING_RABBITMQ_HOST: rabbitmq
+    networks:
+      - caring-net
+
 networks:
   caring-net:
     external: true # `docker-compose.infra.yml`에서 정의된 네트워크를 외부 네트워크로 참조
