@@ -63,7 +63,7 @@ public class UserApiController {
 
     @Operation(summary = "담당자가 보호하는 노인의 긴급 연락처 정보를 추가합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 추가 가능합니다.")
     @PostMapping("/{userUuid}/emergency-contact")
-    public ResponseEntity<HttpStatus> saveEmergencyContactByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+    public ResponseEntity<HttpStatus> saveEmergencyContactByManager(@ManagerCode String managerCode,
                                                                     @ManagerRoles List<String> roles,
                                                                     @PathVariable String userUuid,
                                                                     @RequestBody RequestEmergencyContact requestEmergencyContact) {
@@ -73,7 +73,7 @@ public class UserApiController {
 
     @Operation(summary = "담당자가 보호하는 노인의 긴급 연락처 정보를 수정합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
     @PatchMapping("/{userUuid}/emergency-contact/{contactUuid}")
-    public ResponseEntity<HttpStatus> editEmergencyContactByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+    public ResponseEntity<HttpStatus> editEmergencyContactByManager(@ManagerCode String managerCode,
                                                                     @ManagerRoles List<String> roles,
                                                                     @PathVariable String userUuid,
                                                                     @PathVariable String contactUuid,
@@ -89,7 +89,7 @@ public class UserApiController {
 
     @Operation(summary = "담당자가 보호하는 노인의 긴급 연락처 정보를 삭제합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
     @DeleteMapping("/{userUuid}/emergency-contact/{contactUuid}")
-    public ResponseEntity<HttpStatus> removeEmergencyContactByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+    public ResponseEntity<HttpStatus> removeEmergencyContactByManager(@ManagerCode String managerCode,
                                                                       @ManagerRoles List<String> roles,
                                                                       @PathVariable String userUuid,
                                                                       @PathVariable String contactUuid) {
@@ -99,7 +99,7 @@ public class UserApiController {
 
     @Operation(summary = "담당자가 보호하는 노인의 전화번호 정보를 수정합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
     @PatchMapping("/{userUuid}/phone-number")
-    public ResponseEntity<HttpStatus> editUserPhoneNumberByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+    public ResponseEntity<HttpStatus> editUserPhoneNumberByManager(@ManagerCode String managerCode,
                                                                    @ManagerRoles List<String> roles,
                                                                    @PathVariable String userUuid,
                                                                    @RequestBody RequestPhoneNumber requestPhoneNumber) {
@@ -109,7 +109,7 @@ public class UserApiController {
 
     @Operation(summary = "담당자가 보호하는 노인의 주소 정보를 수정합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
     @PatchMapping("/{userUuid}/address")
-    public ResponseEntity<HttpStatus> editUserAddressByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+    public ResponseEntity<HttpStatus> editUserAddressByManager(@ManagerCode String managerCode,
                                                                @ManagerRoles List<String> roles,
                                                                @PathVariable String userUuid,
                                                                @RequestBody RequestAddress requestAddress) {
@@ -119,7 +119,7 @@ public class UserApiController {
 
     @Operation(summary = "담당자가 보호하는 노인의 주소 정보를 수정합니다. 이때 super 권한이 존재한다면 담당자가 아니어도 가능합니다.")
     @PatchMapping("/{userUuid}/memo")
-    public ResponseEntity<HttpStatus> editUserMemoByManager(@Parameter(hidden = true) @ManagerCode String managerCode,
+    public ResponseEntity<HttpStatus> editUserMemoByManager(@ManagerCode String managerCode,
                                                             @ManagerRoles List<String> roles,
                                                             @PathVariable String userUuid,
                                                             @RequestBody RequestMemo requestMemo) {

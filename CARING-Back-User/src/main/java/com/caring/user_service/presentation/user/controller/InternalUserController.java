@@ -17,7 +17,7 @@ import java.util.List;
 @Tag(name = "회원[INTERNAL]", description = "내부 서버 전용 유저 API/ 해당 스웨거는 개발용입니다! 프론트에서 직접 참조 XXX!!!")
 public class InternalUserController {
 
-    private final RegisterUserByManagerUseCase registerUserByManagerUseCase;
+    private final RegisterUserUseCase registerUserUseCase;
     private final GetUserShelterUuidUseCase getUserShelterUuidUseCase;
     private final GetUsersByUuidListUseCase getUsersByUuidListUseCase;
     private final GetUserDetailInfoUseCase getUserDetailInfoUseCase;
@@ -28,10 +28,10 @@ public class InternalUserController {
     private final UpdateUserAddressUseCase updateUserAddressUseCase;
     private final UpdateUserMemoUseCase updateUserMemoUseCase;
 
-    @Operation(hidden = true)
+    @Operation(summary = "새로운 유저를 등록합니다.")
     @PostMapping("/register")
-    public ResponseUserUuid registerUser(@RequestBody RequestUserWithShelterUuid request) {
-        return registerUserByManagerUseCase.execute(request);
+    public String registerUser(@RequestBody RequestUser requestUser) {
+        return registerUserUseCase.execute(requestUser);
     }
 
     @Operation(hidden = true)
@@ -42,7 +42,7 @@ public class InternalUserController {
 
     @Operation(hidden = true)
     @GetMapping
-    public List<ResponseUser> queryUserByUuidList(@RequestBody List<String> uuidList) {
+    public List<ResponseUser> queryUserByUuidList(@RequestParam List<String> uuidList) {
         return getUsersByUuidListUseCase.execute(uuidList);
     }
 
@@ -71,7 +71,7 @@ public class InternalUserController {
     }
 
     @Operation(hidden = true)
-    @PatchMapping("/emergency-contacts/{contactUuid}")
+    @PutMapping("/emergency-contacts/{contactUuid}")
     public void updateEmergencyContact(
             @PathVariable String contactUuid,
             @RequestBody RequestEmergencyContactWithContactUuid request) {
@@ -79,21 +79,21 @@ public class InternalUserController {
     }
 
     @Operation(hidden = true)
-    @PatchMapping("/{userUuid}/phone-number")
+    @PutMapping("/{userUuid}/phone-number")
     public void updateUserPhoneNumber(@PathVariable String userUuid,
                                                       @RequestBody RequestPhoneNumber request) {
         updateUserPhoneNumberUseCase.execute(userUuid, request.getPhoneNumber());
     }
 
     @Operation(hidden = true)
-    @PatchMapping("/{userUuid}/address")
+    @PutMapping("/{userUuid}/address")
     public void updateUserAddress(@PathVariable String userUuid,
                                   @RequestBody RequestAddress request) {
         updateUserAddressUseCase.execute(userUuid, request);
     }
 
     @Operation(hidden = true)
-    @PatchMapping("/{userUuid}/memo")
+    @PutMapping("/{userUuid}/memo")
     public void updateUserMemo(@PathVariable String userUuid,
                                @RequestBody RequestMemo request) {
 

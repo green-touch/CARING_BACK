@@ -20,8 +20,8 @@ public interface EmergencyContactMapper {
 
     EmergencyContactDTO toEmergencyContactDTO(RequestEmergencyContact requestEmergencyContact);
 
-    @Mapping(target = "name", source = "contactName")
-    @Mapping(target = "relationship", source = "contactRelationship")
-    @Mapping(target = "phoneNumber", source = "contactPhoneNumber")
+//    @Mapping(target = "name", source = "contactName")
+//    @Mapping(target = "relationship", source = "contactRelationship")
+//    @Mapping(target = "phoneNumber", source = "contactPhoneNumber")
     EmergencyContactDTO toEmergencyContactDTO(RequestEmergencyContactWithContactUuid request);
 }

@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Patch 사용 불가능
+ */
 @FeignClient(name = "user-service")
 public interface UserServiceClient {
 
@@ -18,9 +21,9 @@ public interface UserServiceClient {
     ResponseUserUuid registerUser(@RequestBody RequestUserWithShelterUuid request);
 
     @GetMapping("/internal/users")
-    List<ResponseUser> queryUserByUuidList(@RequestBody List<String> uuidList);
+    List<ResponseUser> queryUserByUuidList(@RequestParam List<String> uuidList);
 
-    @PostMapping("/v1/api/access/users/register")
+    @PostMapping("/internal/users/register")
     String registerUser(@RequestBody RequestUser requestUser);
 
     @GetMapping("/internal/users/info/{userUuid}")
@@ -29,23 +32,23 @@ public interface UserServiceClient {
     @PostMapping("/internal/users/{userUuid}/emergency-contacts")
     void saveEmergencyContact(@PathVariable String userUuid, @RequestBody RequestEmergencyContact request);
 
-    @DeleteMapping("/emergency-contacts/{contactUuid}")
+    @DeleteMapping("/internal/users/emergency-contacts/{contactUuid}")
     void deleteEmergencyContact(@PathVariable String contactUuid);
 
-    @PatchMapping("/emergency-contacts/{contactUuid}")
+    @PutMapping("/internal/users/emergency-contacts/{contactUuid}")
     void updateEmergencyContact(
             @PathVariable String contactUuid,
             @RequestBody RequestEmergencyContactWithContactUuid request);
 
-    @PatchMapping("/{userUuid}/phone-number")
+    @PutMapping("/internal/users/{userUuid}/phone-number")
     void updateUserPhoneNumber(@PathVariable String userUuid,
                                @RequestBody RequestPhoneNumber request);
 
-    @PatchMapping("/{userUuid}/address")
+    @PutMapping("/internal/users/{userUuid}/address")
     void updateUserAddress(@PathVariable String userUuid,
                            @RequestBody RequestAddress request);
 
-    @PatchMapping("/{userUuid}/memo")
+    @PutMapping("/internal/users/{userUuid}/memo")
     void updateUserMemo(@RequestParam String userUuid,
                         @RequestBody RequestMemo request);
 

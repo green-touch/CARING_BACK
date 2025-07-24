@@ -6,9 +6,11 @@ import com.caring.user_service.domain.user.entity.User;
 import com.caring.user_service.domain.user.repository.EmergencyContactRepository;
 import com.caring.user_service.presentation.dto.EmergencyContactDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 
+@Slf4j
 @DomainService
 @RequiredArgsConstructor
 public class EmergencyContactDomainServiceImpl implements EmergencyContactDomainService {
@@ -17,11 +19,15 @@ public class EmergencyContactDomainServiceImpl implements EmergencyContactDomain
 
     @Override
     public void addEmergencyContact(User user, EmergencyContactDTO dto) {
+        log.info("{}, {}, {}",
+                dto.getContactName(),
+                dto.getContactPhoneNumber(),
+                dto.getContactRelationship());
         EmergencyContact contact = EmergencyContact.builder()
                 .user(user)
-                .contactName(dto.getName())
-                .contactRelationship(dto.getRelationship())
-                .contactPhoneNumber(dto.getPhoneNumber())
+                .contactName(dto.getContactName())
+                .contactRelationship(dto.getContactRelationship())
+                .contactPhoneNumber(dto.getContactPhoneNumber())
                 .contactUuid(UUID.randomUUID().toString())
                 .build();
 
@@ -32,9 +38,9 @@ public class EmergencyContactDomainServiceImpl implements EmergencyContactDomain
     public void updateEmergencyContact(EmergencyContact emergencyContact, EmergencyContactDTO dto) {
         
         //TODO: emergency Validator 작업
-        emergencyContact.changeName(dto.getName());
-        emergencyContact.changeRelationship(dto.getRelationship());
-        emergencyContact.changePhoneNumber(dto.getPhoneNumber());
+        emergencyContact.changeName(dto.getContactName());
+        emergencyContact.changeRelationship(dto.getContactRelationship());
+        emergencyContact.changePhoneNumber(dto.getContactPhoneNumber());
     }
 
     @Override
