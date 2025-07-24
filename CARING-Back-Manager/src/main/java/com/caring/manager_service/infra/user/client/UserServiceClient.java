@@ -17,7 +17,7 @@ import java.util.List;
 public interface UserServiceClient {
 
     @PostMapping("/internal/users/register")
-    ResponseUserUuid registerUser(@RequestBody RequestUserWithShelterUuid request);
+    String registerUser(@RequestBody RequestUser request);
 
     @GetMapping("/internal/users")
     List<ResponseUser> queryUserByUuidList(@RequestBody List<String> uuidList);

@@ -2,6 +2,7 @@ package com.caring.manager_service.presentation.user.controller;
 
 
 import com.caring.manager_service.common.annotation.ManagerCode;
+import com.caring.manager_service.infra.user.vo.request.RequestUser;
 import com.caring.manager_service.infra.user.vo.request.RequestUserWithShelterUuid;
 import com.caring.manager_service.infra.user.vo.response.ResponseUser;
 import com.caring.manager_service.infra.user.vo.response.ResponseUserUuid;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,12 +30,13 @@ public class UserApiController {
 
     @Operation(summary = "노인 계정을 생성합니다")
     @PostMapping("/shelters/{shelterId}")
-    public ResponseUserUuid registerUserAccountByManager(
+    public ResponseEntity<String> registerUserAccountByManager(
             @Parameter(hidden = true) @ManagerCode String managerCode,
             @PathVariable Long shelterId,
-            @RequestBody RequestUserWithShelterUuid requestUserWithShelterUuid
+            @RequestBody RequestUser requestUser
     ) {
-        return registerUserAccountByManagerUseCase.execute(managerCode, shelterId, requestUserWithShelterUuid);
+        return ResponseEntity.ok(registerUserAccountByManagerUseCase
+                .execute(managerCode, shelterId, requestUser));
     }
 
     //TODO change read get all user in shelter

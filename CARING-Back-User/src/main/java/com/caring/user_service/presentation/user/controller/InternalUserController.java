@@ -1,14 +1,7 @@
 package com.caring.user_service.presentation.user.controller;
 
-import com.caring.user_service.presentation.user.service.GetUserDetailInfoUseCase;
-import com.caring.user_service.presentation.user.service.GetUserShelterUuidUseCase;
-import com.caring.user_service.presentation.user.service.GetUsersByUuidListUseCase;
-import com.caring.user_service.presentation.user.service.RegisterUserByManagerUseCase;
-import com.caring.user_service.presentation.user.vo.RequestUserWithShelterUuid;
-import com.caring.user_service.presentation.user.vo.ResponseUser;
-import com.caring.user_service.presentation.user.vo.ResponseUserDetailInfo;
-import com.caring.user_service.presentation.user.vo.ResponseUserShelterUuid;
-import com.caring.user_service.presentation.user.vo.ResponseUserUuid;
+import com.caring.user_service.presentation.user.service.*;
+import com.caring.user_service.presentation.user.vo.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +21,15 @@ import java.util.List;
 @Tag(name = "회원[INTERNAL]", description = "내부 서버 전용 유저 API/ 해당 스웨거는 개발용입니다! 프론트에서 직접 참조 XXX!!!")
 public class InternalUserController {
 
-    private final RegisterUserByManagerUseCase registerUserByManagerUseCase;
+    private final RegisterUserUseCase registerUserUseCase;
     private final GetUserShelterUuidUseCase getUserShelterUuidUseCase;
     private final GetUsersByUuidListUseCase getUsersByUuidListUseCase;
     private final GetUserDetailInfoUseCase getUserDetailInfoUseCase;
 
     @Operation(hidden = true)
     @PostMapping("/register")
-    public ResponseUserUuid registerUser(@RequestBody RequestUserWithShelterUuid request) {
-        return registerUserByManagerUseCase.execute(request);
+    public String registerUser(@RequestBody RequestUser request) {
+        return registerUserUseCase.execute(request);
     }
 
     @Operation(hidden = true)
