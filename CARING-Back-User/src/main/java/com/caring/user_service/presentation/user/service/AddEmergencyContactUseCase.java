@@ -23,4 +23,10 @@ public class AddEmergencyContactUseCase {
 
         emergencyContactDomainService.addEmergencyContact(user, emergencyContactMapper.toEmergencyContactDTO(request));
     }
+
+    public void execute(String userUuid, RequestEmergencyContact request) {
+        User user = userAdaptor.queryUserByUserUuid(userUuid);
+        emergencyContactDomainService.addEmergencyContact(user, emergencyContactMapper.toEmergencyContactDTO(request));
+    }
+
 }

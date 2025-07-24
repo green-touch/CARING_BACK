@@ -58,17 +58,16 @@ public class InternalUserController {
     }
 
     @Operation(hidden = true)
-    @PostMapping("/emergency-contacts")
-    public ResponseEntity<Void> saveEmergencyContact(@RequestBody RequestEmergencyContact request) {
-        addEmergencyContactUseCase.execute(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @PostMapping("/{userUuid}/emergency-contacts")
+    public void saveEmergencyContact(@PathVariable String userUuid,
+                                     @RequestBody RequestEmergencyContact request) {
+        addEmergencyContactUseCase.execute(userUuid, request);
     }
 
     @Operation(hidden = true)
     @DeleteMapping("/emergency-contacts")
-    public ResponseEntity<Void> deleteEmergencyContact(@RequestBody RequestContactUuid request) {
+    public void deleteEmergencyContact(@RequestBody RequestContactUuid request) {
         deleteEmergencyContactUseCase.execute(request.getContactUuid());
-        return ResponseEntity.noContent().build();
     }
 
     @Operation(hidden = true)
