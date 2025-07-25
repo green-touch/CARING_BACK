@@ -7,6 +7,7 @@ import com.caring.user_service.domain.user.entity.User;
 import com.caring.user_service.presentation.user.mapper.EmergencyContactMapper;
 import com.caring.user_service.presentation.user.vo.RequestEmergencyContact;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 @UseCase
@@ -23,4 +24,10 @@ public class AddEmergencyContactUseCase {
 
         emergencyContactDomainService.addEmergencyContact(user, emergencyContactMapper.toEmergencyContactDTO(request));
     }
+
+    public void execute(String userUuid, RequestEmergencyContact request) {
+        User user = userAdaptor.queryUserByUserUuid(userUuid);
+        emergencyContactDomainService.addEmergencyContact(user, emergencyContactMapper.toEmergencyContactDTO(request));
+    }
+
 }

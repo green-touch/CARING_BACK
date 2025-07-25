@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class EmergencyContactDTO {
-    String name;
-    String relationship;
-    String phoneNumber;
+    private String contactName;
+    private String contactRelationship;
+    private String contactPhoneNumber;
 }

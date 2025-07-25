@@ -105,8 +105,8 @@ public class UserApiController {
 
     @Operation(summary = "유저가 비상연락망 편집 beta (관리자가 수정하는건 권한 문제 해결후 변경 예정) 현재 개발용")
     @PatchMapping("/emergency-contacts")
-    public ResponseEntity<Void> updateEmergencyContact(@RequestBody RequestEmergencyContactWithContactUuid request) {
-        updateEmergencyContactUseCase.execute(request);
+    public ResponseEntity<Void> updateEmergencyContact(@RequestParam String userUuid, @RequestBody RequestEmergencyContactWithContactUuid request) {
+        updateEmergencyContactUseCase.execute(userUuid, request);
         return ResponseEntity.noContent().build();
     }
 
