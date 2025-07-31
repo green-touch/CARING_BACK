@@ -13,6 +13,7 @@ spring:
             baseMessage: Spring Cloud Gateway GlobalFilter
             preLogger: true
             postLogger: true
+            addGateWaySignature: true
       routes:
         # === USER SERVICE ===
         - id: user-service-common
@@ -33,6 +34,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /${segment}
+            - InternalAuthorizationHeaderFilter
 
         - id: user-service-access
           uri: lb://USER-SERVICE
