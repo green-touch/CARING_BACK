@@ -80,6 +80,8 @@ public class SecurityConfig {
             return new AuthorizationDecision(false);
         }
 
+        //TODO: 개발용 로그이기에 나중에 정식 배포시 삭제
+        log.info("{} is {}", signatureHeader, signature);
         String expectedSignature = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, secret).hmacHex(timestamp);
         boolean isValid = expectedSignature.equals(signature);
 
