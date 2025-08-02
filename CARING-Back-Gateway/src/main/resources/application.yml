@@ -165,6 +165,15 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/shelter-service/(?<segment>.*), /${segment}
 
+        - id: shelter-service-actuator
+          uri: lb://SHELTER-SERVICE
+          predicates:
+            - Path=/shelter-service/v1/api/access/shelters/**
+            - Method=GET,POST,PATCH,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/shelter-service/(?<segment>.*), /${segment}
+
 management:
   endpoints:
     web:
