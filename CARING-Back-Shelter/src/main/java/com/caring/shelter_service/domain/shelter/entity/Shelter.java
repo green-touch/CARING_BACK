@@ -21,4 +21,12 @@ public class Shelter extends BaseTimeEntity {
     private Long id;
 
     private String name;
+
+    private String roadAddress;
+    private String detailAddress;
+    private String postalCode;
+
+    private String phoneNumber;
+    private String imageUrl;
+    //TODO 좌표?
 }
