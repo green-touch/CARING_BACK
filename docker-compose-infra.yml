@@ -61,3 +61,4 @@ services:
 
 networks:
   caring-net:
+    name: caring_back_caring-net
