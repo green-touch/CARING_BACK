@@ -13,7 +13,7 @@ spring:
             baseMessage: Spring Cloud Gateway GlobalFilter
             preLogger: true
             postLogger: true
-            addGateWaySignature: true
+        - name: GatewaySignatureFilter
       routes:
         # === USER SERVICE ===
         - id: user-service-common
