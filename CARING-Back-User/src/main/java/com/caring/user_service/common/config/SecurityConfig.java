@@ -1,10 +1,13 @@
 package com.caring.user_service.common.config;
 
-import com.caring.user_service.common.service.MicroServiceIpResolver;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.HmacAlgorithms;
+import org.apache.commons.codec.digest.HmacUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,7 +29,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final MicroServiceIpResolver microServiceIpResolver;
+    private final Environment env;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -63,18 +66,14 @@ public class SecurityConfig {
                                     "/error", "/images/**").permitAll()
                             .requestMatchers(permitAllRequest()).permitAll()
                             .requestMatchers(additionalSwaggerRequests()).permitAll()
-                            .anyRequest().access((authentication, request) -> {
-                                String clientIp = request.getRequest().getRemoteHost();
-                                String gatewayIp = microServiceIpResolver.resolveGatewayIp();
-                                log.info("client ip is = {} gateway ip is = {}", clientIp, gatewayIp);
-                                boolean isAllowed = clientIp.equals(gatewayIp);
-                                // TODO: 보안 설정에서 localhost(127.0.0.1) 허용은 개발 환경에만 적용해야함
-                                if(clientIp.equals("127.0.0.1")) {
-                                    isAllowed = true;
-                                }
-
-                                return new AuthorizationDecision(isAllowed);
-                            });
+                            .requestMatchers(internalRequests()).access((authentication, request) ->
+                                    verifyHmacAuthorization(request.getRequest(), "X-Internal-Timestamp",
+                                            "X-Internal-Signature", "token.secret-internal")
+                            )
+                            .anyRequest().access((authentication, request) ->
+                                    verifyHmacAuthorization(request.getRequest(), "X-Gateway-Timestamp",
+                                            "X-Gateway-Signature", "token.secret-gateway")
+                            );
                 });
     }
 
@@ -101,13 +100,45 @@ public class SecurityConfig {
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
 
-//    private RequestMatcher[] authRelatedEndpoints() {
-//        List<RequestMatcher> requestMatchers = List.of(
-//                antMatcher("/v1/api/users"),
-//                antMatcher("/v1/api/shelters/**"),
-//                antMatcher(HttpMethod.GET, "/v1/api/managers/submissions"),
-//                antMatcher(HttpMethod.POST, "/v1/api/managers/submissions/{uuid}/permission")
-//        );
-//        return requestMatchers.toArray(RequestMatcher[]::new);
-//    }
+    private RequestMatcher[] internalRequests() {
+        List<RequestMatcher> requestMatchers = List.of(
+                antMatcher("/internal/**")
+        );
+        return requestMatchers.toArray(RequestMatcher[]::new);
+    }
+
+    private AuthorizationDecision verifyHmacAuthorization(HttpServletRequest request, String timestampHeader, String signatureHeader, String secretKeyName) {
+        String timestamp = request.getHeader(timestampHeader);
+        String signature = request.getHeader(signatureHeader);
+
+        if (timestamp == null || signature == null) {
+            log.warn("Missing header(s): [{}]={}, [{}]={}", timestampHeader, timestamp, signatureHeader, signature);
+            return new AuthorizationDecision(false);
+        }
+
+        String secret = env.getProperty(secretKeyName);
+        if (secret == null) {
+            log.error("Secret not configured for key: {}", secretKeyName);
+            return new AuthorizationDecision(false);
+        }
+
+        //TODO: 개발용 로그이기에 나중에 정식 배포시 삭제
+        log.info("{} is {}", signatureHeader, signature);
+        String expectedSignature = new HmacUtils(HmacAlgorithms.HMAC_SHA_256, secret).hmacHex(timestamp);
+        boolean isValid = expectedSignature.equals(signature);
+
+        try {
+            long sentTime = Long.parseLong(timestamp);
+            long now = System.currentTimeMillis();
+            if (Math.abs(now - sentTime) > 5 * 60 * 1000) {
+                log.warn("Expired HMAC signature: sent={}, now={}", sentTime, now);
+                isValid = false;
+            }
+        } catch (NumberFormatException e) {
+            log.warn("Invalid timestamp format: {}", timestamp);
+            isValid = false;
+        }
+
+        return new AuthorizationDecision(isValid);
+    }
 }
