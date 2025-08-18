@@ -146,6 +146,55 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/manager-service/(?<segment>.*), /${segment}
 
+        # === SHELTER SERVICE ===
+
+        - id: shelter-service-common
+          uri: lb://SHELTER-SERVICE
+          predicates:
+            - Path=/shelter-service/health_check, /shelter-service/welcome
+            - Method=GET
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/shelter-service/(?<segment>.*), /${segment}
+
+        - id: shelter-service-actuator
+          uri: lb://SHELTER-SERVICE
+          predicates:
+            - Path=/shelter-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/shelter-service/(?<segment>.*), /${segment}
+
+        - id: shelter-service-swagger
+          uri: lb://SHELTER-SERVICE
+          predicates:
+            - Path=/shelter-service/v3/api-docs/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/shelter-service/(?<segment>.*), /${segment}
+
+        - id: shelter-service-swagger-ui
+          uri: lb://SHELTER-SERVICE
+          predicates:
+            - Path=/shelter-service/swagger-ui.html
+            - Path=/shelter-service/swagger-ui/**
+            - Path=/shelter-service/webjars/**
+            - Path=/shelter-service/swagger-resources/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/shelter-service/(?<segment>.*), /${segment}
+
+        - id: shelter-service-actuator
+          uri: lb://SHELTER-SERVICE
+          predicates:
+            - Path=/shelter-service/v1/api/access/shelters/**
+            - Method=GET,POST,PATCH,DELETE
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/shelter-service/(?<segment>.*), /${segment}
+
 management:
   endpoints:
     web:
@@ -159,6 +208,8 @@ springdoc:
         url: /user-service/v3/api-docs
       - name: 관리자 서비스
         url: /manager-service/v3/api-docs
+      - name: 보호소 서비스
+        url: /shelter-service/v3/api-docs
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: method

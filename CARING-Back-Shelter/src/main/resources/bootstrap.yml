@@ -1,0 +1,22 @@
+spring:
+  profiles:
+    active: local
+  cloud:
+    config:
+      name: shelter-service
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  cloud:
+    config:
+      uri: http://config-service:8888
