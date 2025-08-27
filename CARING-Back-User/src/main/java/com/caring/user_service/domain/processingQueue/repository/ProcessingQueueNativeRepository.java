@@ -4,7 +4,10 @@ import com.caring.user_service.domain.processingQueue.entity.ProcessingQueue;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -14,10 +17,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.caring.user_service.common.consts.NativeQuery.*;
+
 @Repository
 @RequiredArgsConstructor
 public class ProcessingQueueNativeRepository {
-    private final JdbcTemplate jdbc;
+    private final NamedParameterJdbcTemplate jdbc;
 
     public record ProcessingJob(
             long pqId,
@@ -42,77 +47,47 @@ public class ProcessingQueueNativeRepository {
     @Transactional
     public List<ProcessingJob> pickBatch(int limit, Duration lease, String workerId) {
         // 1) 후보 선택 + 행 잠금 (잠긴 행은 건너뜀)
-        List<Long> ids = jdbc.queryForList("""
-                SELECT pq_id
-                  FROM processing_queue
-                 WHERE status IN ('PENDING','FAILED')
-                   AND next_run_at <= NOW(6)
-                 ORDER BY next_run_at, pq_id
-                 LIMIT ? FOR UPDATE SKIP LOCKED
-                """, Long.class, limit);
+        List<Long> ids = jdbc.queryForList(SQL_SELECT_IDS_FOR_UPDATE, Long.class, limit);
 
         if (ids.isEmpty()) return List.of();
 
         // 2) 상태 전이 RUNNING (attempt++, lease_until, claimed_by)
-        String inPh = placeholders(ids.size());
-        List<Object> params = new ArrayList<>();
-        params.add(lease.getSeconds());
-        params.add(workerId);
-        params.addAll(ids);
+        MapSqlParameterSource updateParams = new MapSqlParameterSource()
+                .addValue("leaseSeconds", lease.getSeconds())
+                .addValue("workerId", workerId)
+                .addValue("ids", ids);
 
-        jdbc.update("""
-                        UPDATE processing_queue
-                           SET status      = 'RUNNING',
-                               attempt     = attempt + 1,
-                               lease_until = DATE_ADD(NOW(6), INTERVAL ? SECOND),
-                               claimed_by  = ?,
-                               updated_at  = NOW(6)
-                         WHERE pq_id IN (""" + inPh + ")",
-                params.toArray()
-        );
+        jdbc.update(SQL_UPDATE_TO_RUNNING, updateParams);
 
         // 3) 상세 반환
-        List<Object> idParams = new ArrayList<>(ids);
-        return jdbc.query("""
-                        SELECT pq_id, event_id, device_id, attempt, lease_until
-                          FROM processing_queue
-                         WHERE pq_id IN (""" + inPh + ")",
-                JOB_MAPPER,
-                idParams.toArray()
-        );
+        MapSqlParameterSource fetchParams = new MapSqlParameterSource()
+                .addValue("ids", ids);
+
+        return jdbc.query(SQL_FETCH_PICKED_ROWS, (PreparedStatementSetter) fetchParams, JOB_MAPPER);
     }
 
     /** 성공 처리 */
     public void markDone(long pqId) {
-        jdbc.update("""
-                UPDATE processing_queue
-                   SET status = 'DONE',
-                       updated_at = NOW(6)
-                 WHERE pq_id = ?
-                """, pqId);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", pqId);
+        jdbc.update(SQL_MARK_DONE, params);
     }
 
     /** 실패 처리 + 백오프 재시도 예약(next_run_at) */
     public void markFailed(long pqId, String error, Duration backoff) {
-        jdbc.update("""
-                UPDATE processing_queue
-                   SET status      = 'FAILED',
-                       last_error  = LEFT(CONCAT(COALESCE(last_error,''),' | ', ?), 4000),
-                       next_run_at = DATE_ADD(NOW(6), INTERVAL ? SECOND),
-                       updated_at  = NOW(6)
-                 WHERE pq_id = ?
-                """, error, backoff.getSeconds(), pqId);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", pqId)
+                .addValue("err", error)
+                .addValue("backoffSeconds", backoff.getSeconds());
+        jdbc.update(SQL_MARK_FAILED, params);
     }
 
     /** 최대 시도 초과/치명적 오류 등으로 데드레터 전환 */
     public void markDeadLetter(long pqId, String error) {
-        jdbc.update("""
-                UPDATE processing_queue
-                   SET status     = 'DEAD_LETTER',
-                       last_error = LEFT(CONCAT(COALESCE(last_error,''),' | ', ?), 4000),
-                       updated_at = NOW(6)
-                 WHERE pq_id = ?
-                """, error, pqId);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", pqId)
+                .addValue("err", error);
+        jdbc.update(SQL_MARK_DEAD, params);
     }
 
     /**
@@ -120,29 +95,16 @@ public class ProcessingQueueNativeRepository {
      * safety 초만큼 여유를 두고 만료된 RUNNING을 FAILED로 내려 재시도 대상으로 만듦
      */
     public int requeueExpiredLeases(Duration safety) {
-        return jdbc.update("""
-                UPDATE processing_queue
-                   SET status      = 'FAILED',
-                       next_run_at = NOW(6),
-                       updated_at  = NOW(6),
-                       last_error  = LEFT(CONCAT(COALESCE(last_error,''),' | lease expired'), 4000)
-                 WHERE status = 'RUNNING'
-                   AND lease_until < DATE_SUB(NOW(6), INTERVAL ? SECOND)
-                """, safety.getSeconds());
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("safetySeconds", safety.getSeconds());
+        return jdbc.update(SQL_REQUEUE_EXPIRED, params);
     }
 
     /** 장기 작업 시 리스를 연장하고 싶을 때(옵션) */
     public int extendLease(long pqId, Duration extraTtl) {
-        return jdbc.update("""
-                UPDATE processing_queue
-                   SET lease_until = DATE_ADD(COALESCE(lease_until, NOW(6)), INTERVAL ? SECOND),
-                       updated_at  = NOW(6)
-                 WHERE pq_id = ?
-                   AND status = 'RUNNING'
-                """, extraTtl.getSeconds(), pqId);
-    }
-
-    private static String placeholders(int n) {
-        return String.join(",", Collections.nCopies(n, "?"));
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", pqId)
+                .addValue("extraSeconds", extraTtl.getSeconds());
+        return jdbc.update(SQL_EXTEND_LEASE, params);
     }
 }
