@@ -10,6 +10,13 @@ import lombok.experimental.SuperBuilder;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
+/**
+ * pipeline flow
+ * 1. insert sensor & enqueue
+ * 2. pickBatch(큐로부터 status가 PENDING/FAILED 추출)
+ * 3. running logic of calculating sensor
+ * 4. convert status to DONE or FAILED
+ */
 @Table(name="processing_queue",
         indexes={
                 @Index(name="ix_pq_pick", columnList="status, next_run_at, pq_id"),
