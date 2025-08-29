@@ -8,9 +8,9 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
-@Configuration
-@EnableScheduling
 @EnableAsync
+@EnableScheduling
+@Configuration
 public class AsyncConfig {
 
     @Bean("detectorPool")

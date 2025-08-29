@@ -22,7 +22,7 @@ public class ProcessingQueueNativeRepositoryImpl implements ProcessingQueueNativ
 
     public record ProcessingJob(
             long pqId,
-            String eventId,
+            Long eventId,
             String deviceId,
             int attempt,
             LocalDateTime leaseUntil
@@ -30,7 +30,7 @@ public class ProcessingQueueNativeRepositoryImpl implements ProcessingQueueNativ
 
     private static final RowMapper<ProcessingJob> JOB_MAPPER = (rs, i) -> new ProcessingJob(
             rs.getLong("pq_id"),
-            rs.getString("event_id"),
+            rs.getLong("event_id"),
             rs.getString("device_id"),
             rs.getInt("attempt"),
             toLdt(rs.getTimestamp("lease_until"))

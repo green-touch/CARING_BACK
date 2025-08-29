@@ -34,7 +34,7 @@ public class ProcessingQueue extends BaseTimeEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sensor_event_id")
+    @JoinColumn(name = "event_id")
     private SensorEvent sensorEvent;
 
     private String deviceId;            //device 식별자
