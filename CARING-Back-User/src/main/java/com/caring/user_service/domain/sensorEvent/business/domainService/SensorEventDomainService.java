@@ -4,5 +4,5 @@ import com.caring.user_service.domain.sensorEvent.entity.SensorEvent;
 
 public interface SensorEventDomainService {
 
-    SensorEvent createSensorEvent(String eventId, String deviceId, String payloadJson);
+    SensorEvent createSensorEvent(String deviceId, String payloadJson);
 }

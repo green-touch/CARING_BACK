@@ -11,10 +11,9 @@ public class SensorEventDomainServiceImpl implements SensorEventDomainService {
 
     private final SensorEventRepository sensorEventRepository;
     @Override
-    public SensorEvent createSensorEvent(String eventId, String deviceId, String payloadJson) {
+    public SensorEvent createSensorEvent(String deviceId, String payloadJson) {
         SensorEvent sensorEvent = SensorEvent.builder()
                 .deviceId(deviceId)
-                .eventId(eventId)
                 .payloadJson(payloadJson)
                 .build();
         return sensorEventRepository.save(sensorEvent);

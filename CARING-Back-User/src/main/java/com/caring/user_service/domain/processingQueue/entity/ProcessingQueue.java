@@ -1,6 +1,7 @@
 package com.caring.user_service.domain.processingQueue.entity;
 
 import com.caring.user_service.domain.auditing.entity.BaseTimeEntity;
+import com.caring.user_service.domain.sensorEvent.entity.SensorEvent;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,10 @@ public class ProcessingQueue extends BaseTimeEntity {
     @Column(name = "pq_id")
     private Long id;
 
-    private String eventId;             //event 식별자
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sensor_event_id")
+    private SensorEvent sensorEvent;
+
     private String deviceId;            //device 식별자
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

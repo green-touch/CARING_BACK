@@ -4,9 +4,11 @@ import com.caring.user_service.domain.auditing.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+@Getter
 @Entity
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,7 +19,6 @@ public class SensorEvent extends BaseTimeEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "se_id")
     private Long id;
-    private String eventId;
     private String deviceId;
     @Lob @Column(columnDefinition="json")
     private String payloadJson;
