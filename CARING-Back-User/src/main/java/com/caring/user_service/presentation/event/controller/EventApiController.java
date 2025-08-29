@@ -1,4 +1,4 @@
-package com.caring.user_service.presentation.sensor.controller;
+package com.caring.user_service.presentation.event.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/api/logs")
 @RequiredArgsConstructor
-public class LogApiController {
+public class EventApiController {
 
     @Operation(summary = "배터리 상태 로그 정보를 서버로 전송합니다.")
     @PostMapping("/battery-status")
