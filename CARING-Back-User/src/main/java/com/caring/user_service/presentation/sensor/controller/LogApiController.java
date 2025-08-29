@@ -1,4 +1,4 @@
-package com.caring.user_service.presentation.log.controller;
+package com.caring.user_service.presentation.sensor.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

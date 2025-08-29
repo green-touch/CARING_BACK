@@ -1,4 +1,4 @@
-package com.caring.user_service.domain.user.business.domainservice;
+package com.caring.user_service.domain.user.business.domainService;
 
 import com.caring.user_service.common.service.DatabaseCleanUp;
 import com.caring.user_service.domain.user.entity.Role;

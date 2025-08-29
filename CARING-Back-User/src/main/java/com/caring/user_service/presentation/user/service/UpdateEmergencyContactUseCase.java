@@ -2,7 +2,7 @@ package com.caring.user_service.presentation.user.service;
 
 import com.caring.user_service.common.annotation.UseCase;
 import com.caring.user_service.domain.user.business.adaptor.EmergencyContactAdaptor;
-import com.caring.user_service.domain.user.business.domainservice.EmergencyContactDomainService;
+import com.caring.user_service.domain.user.business.domainService.EmergencyContactDomainService;
 import com.caring.user_service.domain.user.entity.EmergencyContact;
 import com.caring.user_service.presentation.user.mapper.EmergencyContactMapper;
 import com.caring.user_service.presentation.user.vo.RequestEmergencyContactWithContactUuid;
