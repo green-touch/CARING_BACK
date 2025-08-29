@@ -1,7 +1,6 @@
 package com.caring.user_service.domain.command.entity;
 
 import com.caring.user_service.domain.auditing.entity.BaseTimeEntity;
-import com.caring.user_service.domain.sensorEvent.entity.CommandStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
