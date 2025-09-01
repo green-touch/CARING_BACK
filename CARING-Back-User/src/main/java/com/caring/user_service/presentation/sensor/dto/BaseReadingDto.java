@@ -1,6 +1,6 @@
-package com.caring.user_service.presentation.event.dto;
+package com.caring.user_service.presentation.sensor.dto;
 
-import com.caring.user_service.presentation.event.dto.sensor.*;
+import com.caring.user_service.presentation.sensor.dto.sensor.*;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;

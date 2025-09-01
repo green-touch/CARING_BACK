@@ -1,4 +1,4 @@
-package com.caring.user_service.presentation.event.service;
+package com.caring.user_service.presentation.sensor.service;
 
 import com.caring.user_service.common.annotation.UseCase;
 import com.caring.user_service.domain.command.business.domainService.CommandsDomainService;

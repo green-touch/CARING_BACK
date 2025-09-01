@@ -1,4 +1,4 @@
-package com.caring.user_service.presentation.event.dto;
+package com.caring.user_service.presentation.sensor.dto;
 
 import lombok.Builder;
 import lombok.Getter;

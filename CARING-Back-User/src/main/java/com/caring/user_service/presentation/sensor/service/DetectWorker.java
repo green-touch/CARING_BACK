@@ -1,4 +1,4 @@
-package com.caring.user_service.presentation.event.service;
+package com.caring.user_service.presentation.sensor.service;
 
 import com.caring.user_service.common.annotation.UseCase;
 import com.caring.user_service.domain.processingQueue.dto.ProcessingJob;
@@ -7,13 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.net.InetAddress;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static com.caring.user_service.common.util.WorkerUtil.*;
 
