@@ -1,5 +1,6 @@
 package com.caring.user_service.domain.processingQueue.repository;
 
+import com.caring.user_service.domain.processingQueue.dto.ProcessingJob;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,13 +21,6 @@ import static com.caring.user_service.common.consts.NativeQuery.*;
 public class ProcessingQueueNativeRepositoryImpl implements ProcessingQueueNativeRepository {
     private final NamedParameterJdbcTemplate jdbc;
 
-    public record ProcessingJob(
-            long pqId,
-            Long eventId,
-            String deviceId,
-            int attempt,
-            LocalDateTime leaseUntil
-    ) {}
 
     private static final RowMapper<ProcessingJob> JOB_MAPPER = (rs, i) -> new ProcessingJob(
             rs.getLong("pq_id"),

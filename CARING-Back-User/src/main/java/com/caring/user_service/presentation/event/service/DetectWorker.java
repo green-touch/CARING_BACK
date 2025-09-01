@@ -1,8 +1,7 @@
 package com.caring.user_service.presentation.event.service;
 
 import com.caring.user_service.common.annotation.UseCase;
-import com.caring.user_service.domain.processingQueue.repository.ProcessingQueueNativeRepositoryImpl;
-import com.caring.user_service.domain.processingQueue.repository.ProcessingQueueNativeRepositoryImpl.ProcessingJob;
+import com.caring.user_service.domain.processingQueue.dto.ProcessingJob;
 import com.caring.user_service.domain.processingQueue.repository.ProcessingQueueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -16,9 +15,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ThreadLocalRandom;
 
+import static com.caring.user_service.common.util.WorkerUtil.*;
+
 @UseCase
 @RequiredArgsConstructor
-public class DetectWorkerUseCase {
+public class DetectWorker {
 
     private final ProcessingQueueRepository processingQueueRepository;
     private final DetectEventUseCase detectEventUseCase;
@@ -44,22 +45,4 @@ public class DetectWorkerUseCase {
             processingQueueRepository.markFailed(job.pqId(), shortErr(e), backoff(job.attempt()+1));
         }
     }
-
-    private Duration backoff(int attempt){
-        int base = Math.min(60, (int) Math.pow(2, attempt - 1));// sec
-        int jitter = ThreadLocalRandom.current().nextInt(0, (int) (base * 0.2) + 1);
-        return Duration.ofSeconds(base + jitter);
-    }
-    private String shortErr(Exception e){
-        return (e.getClass().getSimpleName() + ": " + e.getMessage());
-    }
-    private Executor taskExecutor(){
-        return ForkJoinPool.commonPool();
-    }
-    private String workerId(){
-        return InetAddress.getLoopbackAddress().getHostName()+"-"+Thread.currentThread().getId();
-    }
-
-
-
 }

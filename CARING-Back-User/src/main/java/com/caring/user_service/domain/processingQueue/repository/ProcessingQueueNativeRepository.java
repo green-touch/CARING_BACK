@@ -1,5 +1,7 @@
 package com.caring.user_service.domain.processingQueue.repository;
 
+import com.caring.user_service.domain.processingQueue.dto.ProcessingJob;
+
 import java.time.Duration;
 import java.util.List;
 
