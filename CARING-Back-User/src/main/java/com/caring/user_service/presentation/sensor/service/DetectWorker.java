@@ -21,13 +21,13 @@ public class DetectWorker {
     private final DetectEventUseCase detectEventUseCase;
     private static final long leaseSec = 30;
 
-    @Scheduled(fixedDelayString = "${queue.poll.ms:2000}")
+    @Scheduled(fixedDelayString = "2000")
     public void drain() {
         List<ProcessingJob> jobList = processingQueueRepository.pickBatch(200, Duration.ofSeconds(leaseSec), workerId());
         jobList.forEach(job -> CompletableFuture.runAsync(() -> process(job), taskExecutor()));
     }
 
-    @Scheduled(fixedDelayString = "${queue.lease.recover.ms:10000}")
+    @Scheduled(fixedDelayString = "10000")
     public void recoverStuck() {
         processingQueueRepository.requeueExpiredLeases(Duration.ofSeconds(5)); // 안전 여유
     }

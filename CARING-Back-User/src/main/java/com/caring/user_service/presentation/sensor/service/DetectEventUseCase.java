@@ -6,7 +6,9 @@ import com.caring.user_service.domain.sensorEvent.business.adaptor.SensorEventAd
 import com.caring.user_service.domain.sensorEvent.entity.SensorEvent;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @UseCase
 @Transactional
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class DetectEventUseCase {
 
     //TODO calc event by payload json
     private boolean simpleFallRule(String payloadJson) {
+        log.info("payloadJson: {}", payloadJson);
         return false;
     }
 }

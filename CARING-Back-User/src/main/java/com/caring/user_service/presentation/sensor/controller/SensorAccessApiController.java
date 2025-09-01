@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "[센서 이벤트(AUTH)]")
 @Slf4j
 @RestController
-@RequestMapping("/v1/api/sensors")
+@RequestMapping("/v1/api/access/sensors")
 @RequiredArgsConstructor
-public class SensorApiController {
+public class SensorAccessApiController {
 
     private final IngestEventUseCase ingestEventUseCase;
 
@@ -25,5 +25,6 @@ public class SensorApiController {
     @PostMapping
     public ResponseEntity<Void> receiveSensorData(@RequestBody SensorDataRequestDto sensorDataRequestDto) {
         ingestEventUseCase.execute(sensorDataRequestDto);
+        return ResponseEntity.ok().build();
     }
 }

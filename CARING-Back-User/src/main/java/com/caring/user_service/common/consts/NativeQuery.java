@@ -17,7 +17,7 @@ public class NativeQuery {
                    attempt     = attempt + 1,
                    lease_until = DATE_ADD(NOW(6), INTERVAL :leaseSeconds SECOND),
                    claimed_by  = :workerId,
-                   updated_at  = NOW(6)
+                   last_modified_date  = NOW(6)
              WHERE pq_id IN (:ids)
             """;
     public static final String SQL_FETCH_PICKED_ROWS = """
@@ -29,7 +29,7 @@ public class NativeQuery {
     public static final String SQL_MARK_DONE = """
             UPDATE processing_queue
                SET status = 'DONE',
-                   updated_at = NOW(6)
+                   last_modified_date = NOW(6)
              WHERE pq_id = :id
             """;
 
@@ -38,7 +38,7 @@ public class NativeQuery {
                SET status      = 'FAILED',
                    last_error  = LEFT(CONCAT(COALESCE(last_error,''),' | ', :err), 4000),
                    next_run_at = DATE_ADD(NOW(6), INTERVAL :backoffSeconds SECOND),
-                   updated_at  = NOW(6)
+                   last_modified_date  = NOW(6)
              WHERE pq_id = :id
             """;
 
@@ -46,7 +46,7 @@ public class NativeQuery {
             UPDATE processing_queue
                SET status     = 'DEAD_LETTER',
                    last_error = LEFT(CONCAT(COALESCE(last_error,''),' | ', :err), 4000),
-                   updated_at = NOW(6)
+                   last_modified_date = NOW(6)
              WHERE pq_id = :id
             """;
 
@@ -55,7 +55,7 @@ public class NativeQuery {
             UPDATE processing_queue
                SET status      = 'FAILED',
                    next_run_at = NOW(6),
-                   updated_at  = NOW(6),
+                   last_modified_date  = NOW(6),
                    last_error  = LEFT(CONCAT(COALESCE(last_error,''),' | lease expired'), 4000)
              WHERE status = 'RUNNING'
                AND lease_until < DATE_SUB(NOW(6), INTERVAL :safetySeconds SECOND)
@@ -64,7 +64,7 @@ public class NativeQuery {
     public static final String SQL_EXTEND_LEASE = """
             UPDATE processing_queue
                SET lease_until = DATE_ADD(COALESCE(lease_until, NOW(6)), INTERVAL :extraSeconds SECOND),
-                   updated_at  = NOW(6)
+                   last_modified_date  = NOW(6)
              WHERE pq_id = :id
                AND status = 'RUNNING'
             """;
