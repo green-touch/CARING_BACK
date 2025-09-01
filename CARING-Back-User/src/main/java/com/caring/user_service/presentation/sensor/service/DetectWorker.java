@@ -4,6 +4,7 @@ import com.caring.user_service.common.annotation.UseCase;
 import com.caring.user_service.domain.processingQueue.dto.ProcessingJob;
 import com.caring.user_service.domain.processingQueue.repository.ProcessingQueueRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.caring.user_service.common.util.WorkerUtil.*;
 
+@Slf4j
 @UseCase
 @RequiredArgsConstructor
 public class DetectWorker {
@@ -24,6 +26,7 @@ public class DetectWorker {
     @Scheduled(fixedDelayString = "2000")
     public void drain() {
         List<ProcessingJob> jobList = processingQueueRepository.pickBatch(200, Duration.ofSeconds(leaseSec), workerId());
+        log.info("Draining {} jobs", jobList.size());
         jobList.forEach(job -> CompletableFuture.runAsync(() -> process(job), taskExecutor()));
     }
 

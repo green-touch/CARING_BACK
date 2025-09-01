@@ -3,6 +3,7 @@ package com.caring.user_service.domain.processingQueue.repository;
 import com.caring.user_service.domain.processingQueue.dto.ProcessingJob;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.caring.user_service.common.consts.NativeQuery.*;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class ProcessingQueueNativeRepositoryImpl implements ProcessingQueueNativeRepository {
