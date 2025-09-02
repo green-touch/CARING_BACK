@@ -26,7 +26,6 @@ public class DetectWorker {
     @Scheduled(fixedDelayString = "2000")
     public void drain() {
         List<ProcessingJob> jobList = processingQueueRepository.pickBatch(200, Duration.ofSeconds(leaseSec), workerId());
-        log.info("Draining {} jobs", jobList.size());
         jobList.forEach(job -> CompletableFuture.runAsync(() -> process(job), taskExecutor()));
     }
 
