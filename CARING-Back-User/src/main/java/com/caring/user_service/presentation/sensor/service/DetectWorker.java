@@ -1,0 +1,46 @@
+package com.caring.user_service.presentation.sensor.service;
+
+import com.caring.user_service.common.annotation.UseCase;
+import com.caring.user_service.domain.processingQueue.dto.ProcessingJob;
+import com.caring.user_service.domain.processingQueue.repository.ProcessingQueueRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import static com.caring.user_service.common.util.WorkerUtil.*;
+
+@Slf4j
+@UseCase
+@RequiredArgsConstructor
+public class DetectWorker {
+
+    private final ProcessingQueueRepository processingQueueRepository;
+    private final DetectEventUseCase detectEventUseCase;
+    private static final long leaseSec = 30;
+
+    @Scheduled(fixedDelayString = "2000")
+    public void drain() {
+        List<ProcessingJob> jobList = processingQueueRepository.pickBatch(200, Duration.ofSeconds(leaseSec), workerId());
+        jobList.forEach(job -> CompletableFuture.runAsync(() -> process(job), taskExecutor()));
+    }
+
+    @Scheduled(fixedDelayString = "10000")
+    public void recoverStuck() {
+        processingQueueRepository.requeueExpiredLeases(Duration.ofSeconds(5)); // 안전 여유
+    }
+
+    @Async("detectorPool")
+    void process(ProcessingJob job) {
+        try {
+            detectEventUseCase.runDetectEvent(job.eventId());
+            processingQueueRepository.markDone(job.pqId());
+        } catch (Exception e) {
+            processingQueueRepository.markFailed(job.pqId(), shortErr(e), backoff(job.attempt()+1));
+        }
+    }
+}

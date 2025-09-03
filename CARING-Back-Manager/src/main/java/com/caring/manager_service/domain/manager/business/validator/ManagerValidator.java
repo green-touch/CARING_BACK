@@ -9,4 +9,6 @@ public interface ManagerValidator {
     void checkName(String name);
 
     void checkPassword(String password);
+
+    boolean isGroupedUser(String managerCode, String userUuid);
 }

@@ -11,4 +11,5 @@ public class ResponseEmergencyContact {
     private final String contactName;
     private final String contactRelationship;
     private final String contactPhoneNumber;
+    private final String contactUuid;
 }

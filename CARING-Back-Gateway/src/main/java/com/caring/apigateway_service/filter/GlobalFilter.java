@@ -12,7 +12,8 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Component
 public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Config> {
-    public GlobalFilter(){
+
+    public GlobalFilter() {
         super(Config.class);
     }
 
@@ -21,10 +22,11 @@ public class GlobalFilter extends AbstractGatewayFilterFactory<GlobalFilter.Conf
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
             logPreFilter(config, request);
-            log.info("test");
 
             return chain.filter(exchange)
-                    .doOnError(throwable -> log.error("Error occurred during request processing: {}", throwable.getMessage(), throwable))
+                    .doOnError(throwable ->
+                            log.error("Error occurred during request processing: {}", throwable.getMessage(), throwable)
+                    )
                     .then(Mono.fromRunnable(() -> {
                         ServerHttpResponse response = exchange.getResponse();
                         logPostFilter(config, response);
