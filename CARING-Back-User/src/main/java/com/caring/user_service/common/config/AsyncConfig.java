@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class AsyncConfig {
 
     @Bean("detectorPool")
-    public org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor detectorPool() {
+    public ThreadPoolTaskExecutor detectorPool() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(8);
         taskExecutor.setMaxPoolSize(32);
